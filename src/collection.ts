@@ -118,7 +118,7 @@ export class Collection {
 
   getAllTypes(): string[] {
     return Array.from(this.signatures.keys()).filter(
-      (type) => type === this.defaultType
+      (type) => type !== this.defaultType
     );
   }
 
