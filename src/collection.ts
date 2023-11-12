@@ -117,7 +117,9 @@ export class Collection {
   }
 
   getAllTypes(): string[] {
-    return Array.from(this.signatures.keys());
+    return Array.from(this.signatures.keys()).filter(
+      (type) => type === this.defaultType
+    );
   }
 
   addMeta(language: string, container: Descriptions) {
