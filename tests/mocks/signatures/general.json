@@ -1,0 +1,34 @@
+{
+    "hasIndex": {
+        "arguments": [
+            {
+                "label": "value",
+                "type": "any"
+            },
+            {
+                "label": "index",
+                "type": "any"
+            }
+        ],
+        "returns": [
+            "number"
+        ]
+    },
+    "print": {
+        "arguments": [
+            {
+                "label": "value",
+                "type": "any",
+                "default": "\"\""
+            },
+            {
+                "label": "delimiter",
+                "type": "string",
+                "opt": true
+            }
+        ],
+        "returns": [
+            "null"
+        ]
+    }
+}
