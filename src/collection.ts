@@ -20,6 +20,7 @@ export class Collection {
   private signatures: Map<string, SignatureDefinitionContainer>;
   private meta: Map<string, Descriptions>;
   private defaultType: string;
+  private types: string[];
   private enrichContainer: EnrichContainerFunction;
 
   getDefinitions: GetDefinitionsFunction;
@@ -32,6 +33,7 @@ export class Collection {
     this.signatures = signatures;
     this.meta = meta;
     this.defaultType = defaultType;
+    this.types = [];
 
     this.initialize();
   }
@@ -92,13 +94,19 @@ export class Collection {
     );
   }
 
-  addSignature(type: string, container: SignatureDefinitionContainer) {
+  addSignature(
+    type: string,
+    container: SignatureDefinitionContainer,
+    excludeFromAllTypes: boolean = false
+  ) {
     const item = this.signatures.get(type) ?? {};
 
     this.signatures.set(type, {
       ...item,
       ...container
     });
+
+    if (!excludeFromAllTypes) this.types.push(type);
 
     return this;
   }
@@ -117,9 +125,7 @@ export class Collection {
   }
 
   getAllTypes(): string[] {
-    return Array.from(this.signatures.keys()).filter(
-      (type) => type !== this.defaultType
-    );
+    return this.types.filter((type) => type !== this.defaultType);
   }
 
   addMeta(language: string, container: Descriptions) {
