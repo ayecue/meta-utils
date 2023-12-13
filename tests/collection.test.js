@@ -1,6 +1,7 @@
 const { Collection } = require('../dist');
 const GeneralSignatures = require('./mocks/signatures/general.json');
 const StringSignatures = require('./mocks/signatures/string.json');
+const SubStringSignatures = require('./mocks/signatures/sub-string.json');
 const EN = require('./mocks/descriptions/en');
 
 describe('collection', () => {
@@ -12,6 +13,9 @@ describe('collection', () => {
     meta.addSignature('any', {});
     meta.addSignature('general', GeneralSignatures);
     meta.addSignature('string', StringSignatures);
+    meta.addSignature('sub-string', StringSignatures, {
+      inerhitsFrom: ['string']
+    });
 
     meta.addMeta('en', EN);
   });
@@ -41,6 +45,17 @@ describe('collection', () => {
 
   test('should return definition', () => {
     expect(meta.getDefinition(['string'], 'split')).toEqual({
+      arguments: StringSignatures.split.arguments,
+      returns: StringSignatures.split.returns,
+      description: EN.string.split.description,
+      example: EN.string.split.example
+    });
+  });
+
+  test('should return definitions of parent definition', () => {
+    const result = meta.getDefinitions(['sub-string']);
+
+    expect(result.split).toEqual({
       arguments: StringSignatures.split.arguments,
       returns: StringSignatures.split.returns,
       description: EN.string.split.description,

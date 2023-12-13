@@ -10,6 +10,11 @@ import {
   SignatureDefinitionContainer
 } from './types';
 
+export interface AddSignatureOptions {
+  inerhitsFrom?: string[];
+  isInternalType?: boolean;
+}
+
 export interface CollectionOptions {
   defaultType?: string;
   signatures?: Map<string, SignatureDefinitionContainer>;
@@ -19,6 +24,7 @@ export interface CollectionOptions {
 export class Collection {
   private signatures: Map<string, SignatureDefinitionContainer>;
   private meta: Map<string, Descriptions>;
+  private typeInheritanceMap: Map<string, string[]>;
   private defaultType: string;
   private types: string[];
   private enrichContainer: EnrichContainerFunction;
@@ -34,6 +40,7 @@ export class Collection {
     this.meta = meta;
     this.defaultType = defaultType;
     this.types = [];
+    this.typeInheritanceMap = new Map();
 
     this.initialize();
   }
@@ -65,8 +72,19 @@ export class Collection {
         }
 
         const anyDefinitions = this.getSignaturesByType(defaultType);
+        const resolvedTypes = Array.from(
+          new Set(
+            types.reduce(
+              (result, item) => {
+                result.push(...(this.typeInheritanceMap.get(item) ?? []));
+                return result;
+              },
+              [...types]
+            )
+          )
+        );
 
-        return types
+        return resolvedTypes
           .map((type) => {
             const [main] = type.split(':');
             return this.enrichContainer(
@@ -97,7 +115,7 @@ export class Collection {
   addSignature(
     type: string,
     container: SignatureDefinitionContainer,
-    excludeFromAllTypes: boolean = false
+    { inerhitsFrom = [], isInternalType = false }: AddSignatureOptions = {}
   ) {
     const item = this.signatures.get(type) ?? {};
 
@@ -106,7 +124,9 @@ export class Collection {
       ...container
     });
 
-    if (!excludeFromAllTypes) this.types.push(type);
+    this.typeInheritanceMap.set(type, inerhitsFrom);
+
+    if (!isInternalType) this.types.push(type);
 
     return this;
   }

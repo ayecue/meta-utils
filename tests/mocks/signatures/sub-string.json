@@ -1,0 +1,13 @@
+{
+    "remove2": {
+        "arguments": [
+            {
+                "label": "toDelete",
+                "type": "string"
+            }
+        ],
+        "returns": [
+            "string"
+        ]
+    }
+}
