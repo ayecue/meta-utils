@@ -1,6 +1,6 @@
 {
   "name": "meta-utils",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Meta description utils",
   "main": "dist/index",
   "typings": "dist/index",

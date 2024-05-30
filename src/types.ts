@@ -25,7 +25,7 @@ export enum SignatureDefinitionType {
 }
 
 export interface SignatureDefinition {
-  type: SignatureDefinitionType;
+  type: string;
   description?: string;
   example?: string[];
   isProtected?: boolean;
