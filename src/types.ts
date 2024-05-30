@@ -36,8 +36,16 @@ export interface SignatureFunctionDefinition extends SignatureDefinition {
   returns: string[];
 }
 
+export function isSignatureFunctionDefinition(value: Pick<SignatureDefinition, 'type'>): value is SignatureFunctionDefinition {
+  return value.type === SignatureDefinitionType.Function;
+}
+
 export interface SignaturePropertyDefinition extends SignatureDefinition {
   valueTypes: string[];
+}
+
+export function isSignaturePropertyDefinition(value: Pick<SignatureDefinition, 'type'>): value is SignaturePropertyDefinition {
+  return value.type === SignatureDefinitionType.Property;
 }
 
 export type SignatureDefinitionContainer = {

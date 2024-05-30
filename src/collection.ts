@@ -8,8 +8,9 @@ import {
   EnrichContainerFunction,
   GetDefinitionsFunction,
   Signature,
-  SignatureDefinition,
-  SignatureDefinitionContainer
+  SignatureDefinitionContainer,
+  SignatureFunctionDefinition,
+  SignaturePropertyDefinition
 } from './types';
 
 export interface AddSignatureOptions {
@@ -189,7 +190,7 @@ export class Collection {
     types: string[],
     property: string,
     language?: string
-  ): SignatureDefinition | null {
+  ): SignatureFunctionDefinition | SignaturePropertyDefinition | null {
     const definitions = this.getDefinitions(types, language);
 
     if (Object.prototype.hasOwnProperty.call(definitions, property)) {
