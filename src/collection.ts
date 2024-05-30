@@ -1,6 +1,8 @@
 import fastClone from 'fast-clone';
+import Joi from 'joi';
 import memoizee from 'memoizee';
 
+import { signatureDefinitionContainerSchema } from './schema';
 import {
   Descriptions,
   EnrichContainerFunction,
@@ -118,6 +120,8 @@ export class Collection {
     { inerhitsFrom = [], isInternalType = false }: AddSignatureOptions = {}
   ) {
     const item = this.signatures.get(type) ?? {};
+
+    Joi.assert(container, signatureDefinitionContainerSchema);
 
     this.signatures.set(type, {
       ...item,

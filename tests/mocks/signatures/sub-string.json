@@ -1,13 +1,21 @@
 {
-    "remove2": {
-        "arguments": [
-            {
-                "label": "toDelete",
-                "type": "string"
-            }
-        ],
-        "returns": [
-            "string"
-        ]
-    }
+  "remove2": {
+    "type": "function",
+    "arguments": [
+      {
+        "label": "toDelete",
+        "type": "string"
+      }
+    ],
+    "returns": [
+      "string"
+    ]
+  },
+  "myProperty": {
+    "type": "property",
+    "isProtected": true,
+    "valueTypes": [
+      "string"
+    ]
+  }
 }

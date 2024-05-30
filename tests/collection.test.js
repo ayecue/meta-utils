@@ -13,7 +13,7 @@ describe('collection', () => {
     meta.addSignature('any', {});
     meta.addSignature('general', GeneralSignatures);
     meta.addSignature('string', StringSignatures);
-    meta.addSignature('sub-string', StringSignatures, {
+    meta.addSignature('sub-string', SubStringSignatures, {
       inerhitsFrom: ['string']
     });
 
@@ -39,7 +39,8 @@ describe('collection', () => {
       arguments: StringSignatures.split.arguments,
       returns: StringSignatures.split.returns,
       description: EN.string.split.description,
-      example: EN.string.split.example
+      example: EN.string.split.example,
+      type: "function",
     });
   });
 
@@ -48,7 +49,16 @@ describe('collection', () => {
       arguments: StringSignatures.split.arguments,
       returns: StringSignatures.split.returns,
       description: EN.string.split.description,
-      example: EN.string.split.example
+      example: EN.string.split.example,
+      type: "function"
+    });
+  });
+
+  test('should return property definition', () => {
+    expect(meta.getDefinition(['sub-string'], 'myProperty')).toEqual({
+      valueTypes: SubStringSignatures.myProperty.valueTypes,
+      isProtected: SubStringSignatures.myProperty.isProtected,
+      type: "property"
     });
   });
 
@@ -59,7 +69,8 @@ describe('collection', () => {
       arguments: StringSignatures.split.arguments,
       returns: StringSignatures.split.returns,
       description: EN.string.split.description,
-      example: EN.string.split.example
+      example: EN.string.split.example,
+      type: "function"
     });
   });
 

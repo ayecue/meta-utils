@@ -19,11 +19,27 @@ export interface SignatureDefinitionArg {
   default?: string;
 }
 
+export enum SignatureDefinitionType {
+  Function = 'function',
+  Property = 'property'
+}
+
 export interface SignatureDefinition {
-  arguments?: SignatureDefinitionArg[];
-  returns: string[];
+  type: SignatureDefinitionType;
   description?: string;
   example?: string[];
+  isProtected?: boolean;
+}
+
+export interface SignatureFunctionDefinition extends SignatureDefinition {
+  type: SignatureDefinitionType.Function;
+  arguments?: SignatureDefinitionArg[];
+  returns: string[];
+}
+
+export interface SignaturePropertyDefinition extends SignatureDefinition {
+  type: SignatureDefinitionType.Property;
+  valueTypes: string[];
 }
 
 export type SignatureDefinitionContainer = {

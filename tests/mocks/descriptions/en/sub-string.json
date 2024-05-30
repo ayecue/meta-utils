@@ -1,10 +1,16 @@
 {
-    "remove2": {
-        "description": "Returns a new `string` where the provided `string` got removed.",
-        "example": [
-            "myString = \"42 as an answer is wrong\"",
-            "newString = myString.remove(\"wrong\")",
-            "print(newString + \"right\")"
-        ]
-    }
+  "remove2": {
+    "description": "Returns a new `string` where the provided `string` got removed.",
+    "example": [
+      "myString = \"42 as an answer is wrong\"",
+      "newString = myString.remove(\"wrong\")",
+      "print(newString + \"right\")"
+    ]
+  },
+  "myProperty": {
+    "description": "Test, test!",
+    "example": [
+      "testing"
+    ]
+  }
 }
