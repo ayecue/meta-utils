@@ -1,10 +1,11 @@
 import Joi from 'joi';
+import { SignatureDefinitionType } from './types';
 
 export const signatureDefinitionContainerSchema = Joi.object().pattern(
   Joi.string(),
   Joi.alternatives(
     Joi.object({
-      type: Joi.string().valid('function').required(),
+      type: Joi.string().valid(SignatureDefinitionType.Function).required(),
       description: Joi.string().optional(),
       example: Joi.string().optional(),
       isProtected: Joi.boolean().optional(),
@@ -21,7 +22,7 @@ export const signatureDefinitionContainerSchema = Joi.object().pattern(
       returns: Joi.array().items(Joi.string()).required()
     }),
     Joi.object({
-      type: Joi.string().valid('property').required(),
+      type: Joi.string().valid(SignatureDefinitionType.Property).required(),
       description: Joi.string().optional(),
       example: Joi.string().optional(),
       isProtected: Joi.boolean().optional(),

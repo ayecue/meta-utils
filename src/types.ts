@@ -32,13 +32,11 @@ export interface SignatureDefinition {
 }
 
 export interface SignatureFunctionDefinition extends SignatureDefinition {
-  type: SignatureDefinitionType.Function;
   arguments?: SignatureDefinitionArg[];
   returns: string[];
 }
 
 export interface SignaturePropertyDefinition extends SignatureDefinition {
-  type: SignatureDefinitionType.Property;
   valueTypes: string[];
 }
 
