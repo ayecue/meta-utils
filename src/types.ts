@@ -43,7 +43,7 @@ export interface SignaturePropertyDefinition extends SignatureDefinition {
 }
 
 export type SignatureDefinitionContainer = {
-  [key: string]: SignatureDefinition;
+  [key: string]: SignatureFunctionDefinition | SignaturePropertyDefinition;
 };
 
 export interface Signature {
