@@ -1,21 +1,48 @@
 {
-  "remove2": {
-    "type": "function",
-    "arguments": [
-      {
-        "label": "toDelete",
-        "type": "string"
-      }
-    ],
-    "returns": [
-      "string"
-    ]
-  },
-  "myProperty": {
-    "type": "property",
-    "isProtected": true,
-    "valueTypes": [
-      "string"
-    ]
+  "type": "sub-string",
+  "extends": "string",
+  "definitions": {
+    "remove2": {
+      "type": "function",
+      "arguments": [
+        {
+          "label": "toDelete",
+          "type": "string"
+        }
+      ],
+      "returns": [
+        "string"
+      ]
+    },
+    "myProperty": {
+      "type": {
+        "type": "list",
+        "valueType": "string"
+      },
+      "isProtected": true
+    },
+    "split": {
+      "type": "function",
+      "arguments": [
+        {
+          "label": "delimiter",
+          "type": "string"
+        },
+        {
+          "label": "extraArg",
+          "type": {
+            "type": "map",
+            "valueType": "string",
+            "keyType": "string"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "type": "list",
+          "valueType": "string"
+        }
+      ]
+    }
   }
 }

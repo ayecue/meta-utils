@@ -1,77 +1,69 @@
-const { Collection } = require('../dist');
+const { Container, Signature } = require('../dist');
+const AnySignatures = require('./mocks/signatures/any.json');
 const GeneralSignatures = require('./mocks/signatures/general.json');
 const StringSignatures = require('./mocks/signatures/string.json');
 const SubStringSignatures = require('./mocks/signatures/sub-string.json');
+const NotSearchableSignature = require('./mocks/signatures/not-searchable.json');
 const EN = require('./mocks/descriptions/en');
 
 describe('collection', () => {
   let meta = null;
 
   beforeEach(() => {
-    meta = new Collection();
+    meta = new Container();
 
-    meta.addSignature('any', {});
-    meta.addSignature('general', GeneralSignatures);
-    meta.addSignature('string', StringSignatures);
-    meta.addSignature('sub-string', SubStringSignatures, {
-      inerhitsFrom: ['string']
-    });
+    meta.addTypeSignatureFromPayload(AnySignatures);
+    meta.addTypeSignatureFromPayload(GeneralSignatures);
+    meta.addTypeSignatureFromPayload(StringSignatures);
+    meta.addTypeSignatureFromPayload(SubStringSignatures);
+    meta.addTypeSignatureFromPayload(NotSearchableSignature);
+
+    meta.excludeFromSearch.add('not-searchable');
 
     meta.addMeta('en', EN);
   });
 
   test('should return signatures', () => {
-    expect(meta.getSignaturesByType('general')).toEqual(GeneralSignatures);
+    expect(meta.getTypeSignature('general').toJSON()).toEqual(Signature.parse(GeneralSignatures).toJSON());
+  });
+
+  test('should return any signature', () => {
+    expect(meta.getDefinition(['general', 'string'], 'hasIndex').arguments.map((item) => item.label)).toEqual(AnySignatures.definitions.hasIndex.arguments.map((item) => item.label));
+    expect(meta.getDefinition('any', 'hasIndex').arguments.map((item) => item.label)).toEqual(AnySignatures.definitions.hasIndex.arguments.map((item) => item.label));
   });
 
   test('should return description', () => {
-    expect(meta.getDescription('general', 'print')).toEqual(EN.general.print.description);
+    expect(meta.getDefinition('general', 'print').description).toEqual(EN.general.print.description);
   });
 
   test('should return example', () => {
-    expect(meta.getExample('general', 'print')).toEqual(EN.general.print.example);
-  });
-
-  test('should return definitions', () => {
-    const result = meta.getDefinitions(['string']);
-
-    expect(result.split).toEqual({
-      arguments: StringSignatures.split.arguments,
-      returns: StringSignatures.split.returns,
-      description: EN.string.split.description,
-      example: EN.string.split.example,
-      type: "function",
-    });
+    expect(meta.getDefinition('general', 'print').example).toEqual(EN.general.print.example);
   });
 
   test('should return definition', () => {
-    expect(meta.getDefinition(['string'], 'split')).toEqual({
-      arguments: StringSignatures.split.arguments,
-      returns: StringSignatures.split.returns,
-      description: EN.string.split.description,
-      example: EN.string.split.example,
-      type: "function"
-    });
+    expect(meta.getDefinition(['string'], 'split').toJSON()).toMatchSnapshot();
   });
 
   test('should return property definition', () => {
-    expect(meta.getDefinition(['sub-string'], 'myProperty')).toEqual({
-      valueTypes: SubStringSignatures.myProperty.valueTypes,
-      isProtected: SubStringSignatures.myProperty.isProtected,
-      type: "property"
-    });
+    expect(meta.getDefinition('sub-string', 'myProperty').toJSON()).toMatchSnapshot();
+  });
+
+  test('should return definitions of child definition', () => {
+    expect(meta.getDefinition(['sub-string'], 'split').toJSON()).toMatchSnapshot();
   });
 
   test('should return definitions of parent definition', () => {
-    const result = meta.getDefinitions(['sub-string']);
+    expect(meta.getDefinition(['sub-string'], 'hasIndex').toJSON()).toMatchSnapshot();
+  });
 
-    expect(result.split).toEqual({
-      arguments: StringSignatures.split.arguments,
-      returns: StringSignatures.split.returns,
-      description: EN.string.split.description,
-      example: EN.string.split.example,
-      type: "function"
-    });
+  test('should return no matches', () => {
+    const result = meta.searchDefinitionMatches('not-searchable', 'hello');
+    expect([...result.keys()]).toEqual([]);
+  });
+
+  test('should return two matches', () => {
+    const result = meta.searchDefinitionMatches(['sub-string', 'string', 'general'], 'split');
+    expect([...result.keys()]).toEqual(['sub-string', 'string']);
   });
 
   test('should create fork', () => {
@@ -93,7 +85,7 @@ describe('collection', () => {
       }
     });
 
-    expect(result.getDescription('general', 'print')).toEqual('test');
-    expect(meta.getDescription('general', 'print')).toEqual(EN.general.print.description);
+    expect(result.getDefinition('general', 'print').description).toEqual('test');
+    expect(meta.getDefinition('general', 'print').description).toEqual(EN.general.print.description);
   });
 });

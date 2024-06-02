@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`collection should return definition 1`] = `
+Object {
+  "arguments": Array [
+    Object {
+      "default": null,
+      "label": "delimiter",
+      "opt": false,
+      "type": "string",
+    },
+  ],
+  "description": "Returns a \`list\` where each item is a segment of the \`string\`. The separation depends on the provided separator \`string\`. Keep in mind that for some odd reason, this method is using regular expressions for matching.",
+  "example": Array [
+    "myString = \\"42 as an answer is wrong\\"",
+    "segments = myString.split(\\" \\")",
+    "if segments[0] != \\"42\\" then",
+    "   print(\\"Invalid information spotted!\\")",
+    "else",
+    "   print(\\"Information seems valid!\\")",
+    "end if",
+  ],
+  "isProtected": false,
+  "returns": Array [
+    Object {
+      "type": "list",
+      "valueType": "string",
+    },
+  ],
+  "type": "function",
+}
+`;
+
+exports[`collection should return definitions of child definition 1`] = `
+Object {
+  "arguments": Array [
+    Object {
+      "default": null,
+      "label": "delimiter",
+      "opt": false,
+      "type": "string",
+    },
+    Object {
+      "default": null,
+      "label": "extraArg",
+      "opt": false,
+      "type": Object {
+        "keyType": "string",
+        "type": "map",
+        "valueType": "string",
+      },
+    },
+  ],
+  "description": null,
+  "example": null,
+  "isProtected": false,
+  "returns": Array [
+    Object {
+      "type": "list",
+      "valueType": "string",
+    },
+  ],
+  "type": "function",
+}
+`;
+
+exports[`collection should return definitions of parent definition 1`] = `
+Object {
+  "arguments": Array [
+    Object {
+      "default": null,
+      "label": "index",
+      "opt": false,
+      "type": "number",
+    },
+  ],
+  "description": "Returns \`true\` if the provided index is available in the \`string\`. Otherwise, this method will return \`false\`.",
+  "example": Array [
+    "myString = \\"42 as an answer is wrong\\"",
+    "containsIndex = myString.hasIndex(1)",
+    "if containsIndex then",
+    "   print(\\"String contains index of 1.\\")",
+    "else",
+    "   print(\\"String does not contain index of 1.\\")",
+    "end if",
+  ],
+  "isProtected": false,
+  "returns": Array [
+    "number",
+  ],
+  "type": "function",
+}
+`;
+
+exports[`collection should return property definition 1`] = `
+Object {
+  "description": "Test, test!",
+  "example": Array [
+    "testing",
+  ],
+  "isProtected": true,
+  "type": Object {
+    "type": "list",
+    "valueType": "string",
+  },
+}
+`;
