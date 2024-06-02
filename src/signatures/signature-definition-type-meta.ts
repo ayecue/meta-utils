@@ -12,6 +12,39 @@ export class SignatureDefinitionTypeMeta {
   readonly keyType: SignatureDefinitionType | null;
   readonly valueType: SignatureDefinitionType | null;
 
+  static fromString(value: string) {
+    const matches = value.match(/^([a-zA-Z]+)(?:<([^>]+)>)?$/);
+
+    if (!matches) return null;
+
+    const [_, type, subTypes] = matches;
+
+    if (subTypes) {
+      const types = subTypes.split(',').map((item) => item.trim());
+
+      if (types.length > 2) return null;
+
+      const [keyType, valueType] = types;
+
+      if (valueType == null) {
+        return new SignatureDefinitionTypeMeta({
+          type,
+          valueType: keyType
+        });
+      }
+
+      return new SignatureDefinitionTypeMeta({
+        type,
+        valueType,
+        keyType
+      });
+    }
+
+    return new SignatureDefinitionTypeMeta({
+      type
+    });
+  }
+
   static parse(
     value: SignaturePayloadDefinitionType
   ): SignatureDefinitionTypeMeta {

@@ -6,7 +6,7 @@ const SubStringSignatures = require('./mocks/signatures/sub-string.json');
 const NotSearchableSignature = require('./mocks/signatures/not-searchable.json');
 const EN = require('./mocks/descriptions/en');
 
-describe('collection', () => {
+describe('container', () => {
   let meta = null;
 
   beforeEach(() => {

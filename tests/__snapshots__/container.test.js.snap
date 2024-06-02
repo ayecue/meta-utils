@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`collection should return definition 1`] = `
+exports[`container should return definition 1`] = `
 Object {
   "arguments": Array [
     Object {
@@ -31,7 +31,7 @@ Object {
 }
 `;
 
-exports[`collection should return definitions of child definition 1`] = `
+exports[`container should return definitions of child definition 1`] = `
 Object {
   "arguments": Array [
     Object {
@@ -64,7 +64,7 @@ Object {
 }
 `;
 
-exports[`collection should return definitions of parent definition 1`] = `
+exports[`container should return definitions of parent definition 1`] = `
 Object {
   "arguments": Array [
     Object {
@@ -92,7 +92,7 @@ Object {
 }
 `;
 
-exports[`collection should return property definition 1`] = `
+exports[`container should return property definition 1`] = `
 Object {
   "description": "Test, test!",
   "example": Array [
