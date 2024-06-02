@@ -6,7 +6,10 @@
       "arguments": [
         {
           "label": "value",
-          "type": "any"
+          "types": [
+            "map",
+            "string"
+          ]
         },
         {
           "label": "index",

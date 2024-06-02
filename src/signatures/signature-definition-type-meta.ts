@@ -1,5 +1,8 @@
 import { SignaturePayloadDefinitionType } from '../types/payloads';
-import { SignatureDefinitionType } from '../types/signature-definition';
+import {
+  SignatureDefinitionBaseType,
+  SignatureDefinitionType
+} from '../types/signature-definition';
 
 export interface SignatureDefinitionTypeMetaOptions {
   type: SignatureDefinitionType;
@@ -17,31 +20,36 @@ export class SignatureDefinitionTypeMeta {
 
     if (!matches) return null;
 
+    let valueType = null;
+    let keyType = null;
     const [_, type, subTypes] = matches;
+
+    if (type === SignatureDefinitionBaseType.Map) {
+      valueType = SignatureDefinitionBaseType.Any;
+      keyType = SignatureDefinitionBaseType.Any;
+    } else if (type === SignatureDefinitionBaseType.List) {
+      valueType = SignatureDefinitionBaseType.Any;
+    }
 
     if (subTypes) {
       const types = subTypes.split(',').map((item) => item.trim());
 
       if (types.length > 2) return null;
 
-      const [keyType, valueType] = types;
+      const [kType, vType] = types;
 
-      if (valueType == null) {
-        return new SignatureDefinitionTypeMeta({
-          type,
-          valueType: keyType
-        });
+      if (vType != null) {
+        valueType = vType;
+        keyType = kType;
+      } else {
+        valueType = kType;
       }
-
-      return new SignatureDefinitionTypeMeta({
-        type,
-        valueType,
-        keyType
-      });
     }
 
     return new SignatureDefinitionTypeMeta({
-      type
+      type,
+      keyType,
+      valueType
     });
   }
 
@@ -49,12 +57,38 @@ export class SignatureDefinitionTypeMeta {
     value: SignaturePayloadDefinitionType
   ): SignatureDefinitionTypeMeta {
     if (typeof value === 'string') {
-      return new SignatureDefinitionTypeMeta({ type: value });
-    } else if (typeof value === 'object') {
+      const type = value;
+      let valueType = null;
+      let keyType = null;
+
+      if (type === SignatureDefinitionBaseType.Map) {
+        valueType = SignatureDefinitionBaseType.Any;
+        keyType = SignatureDefinitionBaseType.Any;
+      } else if (type === SignatureDefinitionBaseType.List) {
+        valueType = SignatureDefinitionBaseType.Any;
+      }
+
       return new SignatureDefinitionTypeMeta({
-        type: value.type,
-        keyType: value.keyType,
-        valueType: value.valueType
+        type,
+        valueType,
+        keyType
+      });
+    } else if (typeof value === 'object') {
+      const type = value.type;
+      let valueType = value.valueType ?? null;
+      let keyType = value.keyType ?? null;
+
+      if (type === SignatureDefinitionBaseType.Map) {
+        valueType = valueType ?? SignatureDefinitionBaseType.Any;
+        keyType = keyType ?? SignatureDefinitionBaseType.Any;
+      } else if (type === SignatureDefinitionBaseType.List) {
+        valueType = valueType ?? SignatureDefinitionBaseType.Any;
+      }
+
+      return new SignatureDefinitionTypeMeta({
+        type,
+        valueType,
+        keyType
       });
     }
 
@@ -67,6 +101,18 @@ export class SignatureDefinitionTypeMeta {
     this.valueType = options.valueType ?? null;
   }
 
+  isEqual(meta: SignatureDefinitionTypeMeta) {
+    return this.type === meta.type;
+  }
+
+  isEqualSafe(meta: SignatureDefinitionTypeMeta) {
+    return (
+      this.type === meta.type &&
+      this.keyType === meta.keyType &&
+      this.valueType === meta.valueType
+    );
+  }
+
   toString() {
     if (this.keyType === null) {
       if (this.valueType === null) {
@@ -76,7 +122,7 @@ export class SignatureDefinitionTypeMeta {
       return `${this.type}<${this.valueType}>`;
     }
 
-    return `${this.type}<${this.keyType}, ${this.valueType}>`;
+    return `${this.type}<${this.keyType},${this.valueType}>`;
   }
 
   toJSON():

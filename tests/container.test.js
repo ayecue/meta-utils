@@ -28,8 +28,8 @@ describe('container', () => {
   });
 
   test('should return any signature', () => {
-    expect(meta.getDefinition(['general', 'string'], 'hasIndex').arguments.map((item) => item.label)).toEqual(AnySignatures.definitions.hasIndex.arguments.map((item) => item.label));
-    expect(meta.getDefinition('any', 'hasIndex').arguments.map((item) => item.label)).toEqual(AnySignatures.definitions.hasIndex.arguments.map((item) => item.label));
+    expect(meta.getDefinition(['general', 'string'], 'hasIndex').getArguments().map((item) => item.getLabel())).toEqual(AnySignatures.definitions.hasIndex.arguments.map((item) => item.label));
+    expect(meta.getDefinition('any', 'hasIndex').getArguments().map((item) => item.getLabel())).toEqual(AnySignatures.definitions.hasIndex.arguments.map((item) => item.label));
   });
 
   test('should return description', () => {
@@ -41,7 +41,7 @@ describe('container', () => {
   });
 
   test('should return arg default', () => {
-    expect(meta.getDefinition('general', 'print').getArgument('value').default.value).toEqual('');
+    expect(meta.getDefinition('general', 'print').getArgument('value').getDefault().value).toEqual('');
   });
 
   test('should return definition', () => {

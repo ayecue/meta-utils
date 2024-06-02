@@ -7,7 +7,9 @@ Object {
       "default": null,
       "label": "delimiter",
       "opt": false,
-      "type": "string",
+      "types": Array [
+        "string",
+      ],
     },
   ],
   "description": "Returns a \`list\` where each item is a segment of the \`string\`. The separation depends on the provided separator \`string\`. Keep in mind that for some odd reason, this method is using regular expressions for matching.",
@@ -38,17 +40,21 @@ Object {
       "default": null,
       "label": "delimiter",
       "opt": false,
-      "type": "string",
+      "types": Array [
+        "string",
+      ],
     },
     Object {
       "default": null,
       "label": "extraArg",
       "opt": false,
-      "type": Object {
-        "keyType": "string",
-        "type": "map",
-        "valueType": "string",
-      },
+      "types": Array [
+        Object {
+          "keyType": "string",
+          "type": "map",
+          "valueType": "string",
+        },
+      ],
     },
   ],
   "description": null,
@@ -71,7 +77,9 @@ Object {
       "default": null,
       "label": "index",
       "opt": false,
-      "type": "number",
+      "types": Array [
+        "number",
+      ],
     },
   ],
   "description": "Returns \`true\` if the provided index is available in the \`string\`. Otherwise, this method will return \`false\`.",

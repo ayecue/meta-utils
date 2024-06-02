@@ -29,7 +29,8 @@ export type SignaturePayloadDefinitionType =
 
 export interface SignaturePayloadDefinitionArg {
   label: string;
-  type: SignaturePayloadDefinitionType;
+  type?: SignaturePayloadDefinitionType;
+  types?: SignaturePayloadDefinitionType[];
   opt?: boolean;
   default?: SignatureDefinitionFunctionArgDefault;
 }

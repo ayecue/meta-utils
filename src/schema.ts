@@ -2,20 +2,11 @@ import Joi from 'joi';
 import { SignatureDefinitionBaseType } from './types/signature-definition';
 
 export const signatureDefinitionTypeSchema = Joi.alternatives(
-  Joi.string().invalid(SignatureDefinitionBaseType.Map, SignatureDefinitionBaseType.List),
+  Joi.string(),
   Joi.object({
-    type: Joi.string().invalid(SignatureDefinitionBaseType.Map, SignatureDefinitionBaseType.List).required(),
+    type: Joi.string().required(),
     keyType: Joi.string().optional(),
     valueType: Joi.string().optional(),
-  }),
-  Joi.object({
-    type: Joi.string().valid(SignatureDefinitionBaseType.Map),
-    keyType: Joi.string().required(),
-    valueType: Joi.string().required(),
-  }),
-  Joi.object({
-    type: Joi.string().valid(SignatureDefinitionBaseType.List),
-    valueType: Joi.string().required(),
   })
 );
 
@@ -27,6 +18,16 @@ export const signatureDefinitionFunctionSchemaArgDefaultString = Joi.object({
 export const signatureDefinitionFunctionSchemaArgDefaultNumber = Joi.object({
   type: Joi.string().valid(SignatureDefinitionBaseType.Number).required(),
   value: Joi.number().required()
+});
+
+export const signatureDefinitionFunctionSchemaArgMultiTypes = Joi.object({
+  label: Joi.string().required(),
+  types: Joi.array().items(signatureDefinitionTypeSchema).required(),
+  opt: Joi.boolean().optional(),
+  default: Joi.alternatives(
+    signatureDefinitionFunctionSchemaArgDefaultString,
+    signatureDefinitionFunctionSchemaArgDefaultNumber
+  ).optional()
 });
 
 export const signatureDefinitionFunctionSchemaArg = Joi.object({
@@ -45,7 +46,10 @@ export const signatureDefinitionFunctionSchema = Joi.object({
   example: Joi.string().optional(),
   isProtected: Joi.boolean().optional(),
   arguments: Joi.array()
-    .items(signatureDefinitionFunctionSchemaArg)
+    .items(Joi.alternatives(
+      signatureDefinitionFunctionSchemaArg,
+      signatureDefinitionFunctionSchemaArgMultiTypes
+    ))
     .optional(),
   returns: Joi.array().items(signatureDefinitionTypeSchema).required()
 });

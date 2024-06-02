@@ -21,8 +21,9 @@ export interface SignatureDefinitionFunctionOptions
 }
 
 export class SignatureDefinitionFunction extends SignatureDefinition {
-  readonly arguments: SignatureDefinitionFunctionArg[];
-  readonly returns: SignatureDefinitionTypeMeta[];
+  private _argList: string[];
+  private _argRefs: Map<string, SignatureDefinitionFunctionArg>;
+  private _returns: Map<string, SignatureDefinitionTypeMeta>;
 
   static parse(
     payload: SignaturePayloadDefinitionFunction
@@ -47,31 +48,36 @@ export class SignatureDefinitionFunction extends SignatureDefinition {
       description: options.description,
       example: options.example
     });
-    this.arguments = options.arguments;
-    this.returns = options.returns;
+    this._argList = options.arguments.map((item) => item.getLabel());
+    this._argRefs = options.arguments.reduce<
+      Map<string, SignatureDefinitionFunctionArg>
+    >((result, argVal) => {
+      return result.set(argVal.getLabel(), argVal);
+    }, new Map());
+    this._returns = options.returns.reduce<
+      Map<string, SignatureDefinitionTypeMeta>
+    >((result, returnVal) => {
+      return result.set(returnVal.type, returnVal);
+    }, new Map());
+  }
+
+  getArguments(): SignatureDefinitionFunctionArg[] {
+    return this._argList.map((label) => this._argRefs.get(label));
   }
 
   getArgument(label: string): SignatureDefinitionFunctionArg | null {
-    const index = this.arguments.findIndex((item) => item.label === label);
-
-    if (index === -1) {
-      return null;
-    }
-
-    return this.arguments[index];
+    return this._argRefs.get(label) ?? null;
   }
 
-  setDescription(payload: DescriptionPayloadEntry): this {
-    this.description = payload.description;
-    this.example = payload.example ?? null;
-    return this;
+  getReturns(): SignatureDefinitionTypeMeta[] {
+    return [...this._returns.values()];
   }
 
   toJSON() {
     return {
       ...super.toJSON(),
-      arguments: this.arguments.map((item) => item.toJSON()),
-      returns: this.returns.map((item) => item.toJSON())
+      arguments: this.getArguments().map((item) => item.toJSON()),
+      returns: this.getReturns().map((item) => item.toJSON())
     };
   }
 
@@ -79,8 +85,8 @@ export class SignatureDefinitionFunction extends SignatureDefinition {
     return new SignatureDefinitionFunction({
       type: this.type,
       isProtected: this.isProtected,
-      arguments: this.arguments,
-      returns: this.returns,
+      arguments: this.getArguments(),
+      returns: this.getReturns(),
       description: item?.description ?? this.description,
       example: item?.example ?? this.example
     });
@@ -90,8 +96,8 @@ export class SignatureDefinitionFunction extends SignatureDefinition {
     return new SignatureDefinitionFunction({
       type: this.type.copy(),
       isProtected: this.isProtected,
-      arguments: this.arguments.map((item) => item.copy()),
-      returns: this.returns.map((item) => item.copy()),
+      arguments: this.getArguments().map((item) => item.copy()),
+      returns: this.getReturns().map((item) => item.copy()),
       description: this.description,
       example: this.example
     });
