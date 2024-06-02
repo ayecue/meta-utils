@@ -49,6 +49,11 @@ describe('collection', () => {
     expect(meta.getDefinition(['sub-string'], 'hasIndex').toJSON()).toMatchSnapshot();
   });
 
+  test('should return no matches', () => {
+    const result = meta.searchDefinitionMatches('not-searchable', 'hello');
+    expect([...result.keys()]).toEqual([]);
+  });
+
   test('should return two matches', () => {
     const result = meta.searchDefinitionMatches(['sub-string', 'string', 'general'], 'split');
     expect([...result.keys()]).toEqual(['sub-string', 'string']);
