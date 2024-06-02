@@ -210,15 +210,15 @@ export class Signature {
 
   copy() {
     const signature = new Signature(this._type);
-    const definitions: Signature['definitions'] = {};
+    const definitions: Signature['_definitions'] = {};
     const definitionKeys = Object.keys(this._definitions);
 
     for (const key of definitionKeys) {
       definitions[key] = this._definitions[key].copy();
     }
 
-    const descriptions: Signature['descriptions'] = {};
-    const descriptionsKeys = Object.keys(this._definitions);
+    const descriptions: Signature['_descriptions'] = {};
+    const descriptionsKeys = Object.keys(this._descriptions);
 
     for (const key of descriptionsKeys) {
       descriptions[key] = { ...descriptions[key] };

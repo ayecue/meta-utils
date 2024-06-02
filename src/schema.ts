@@ -40,7 +40,7 @@ export const signatureDefinitionContainerSchema = Joi.object().pattern(
       returns: Joi.array().items(signatureDefinitionTypeSchema).required()
     }),
     Joi.object({
-      type: signatureDefinitionTypeSchema.required(),
+      type: signatureDefinitionTypeSchema.invalid(SignatureDefinitionBaseType.Function).required(),
       description: Joi.string().optional(),
       example: Joi.string().optional(),
       isProtected: Joi.boolean().optional()

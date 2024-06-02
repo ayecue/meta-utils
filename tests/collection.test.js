@@ -2,6 +2,7 @@ const { Container, Signature } = require('../dist');
 const GeneralSignatures = require('./mocks/signatures/general.json');
 const StringSignatures = require('./mocks/signatures/string.json');
 const SubStringSignatures = require('./mocks/signatures/sub-string.json');
+const NotSearchableSignature = require('./mocks/signatures/not-searchable.json');
 const EN = require('./mocks/descriptions/en');
 
 describe('collection', () => {
@@ -13,6 +14,9 @@ describe('collection', () => {
     meta.addTypeSignatureFromPayload(GeneralSignatures);
     meta.addTypeSignatureFromPayload(StringSignatures);
     meta.addTypeSignatureFromPayload(SubStringSignatures);
+    meta.addTypeSignatureFromPayload(NotSearchableSignature);
+
+    meta.excludeFromSearch.add('not-searchable');
 
     meta.addMeta('en', EN);
   });
@@ -43,6 +47,11 @@ describe('collection', () => {
 
   test('should return definitions of parent definition', () => {
     expect(meta.getDefinition(['sub-string'], 'hasIndex').toJSON()).toMatchSnapshot();
+  });
+
+  test('should return two matches', () => {
+    const result = meta.searchDefinitionMatches(['sub-string', 'string', 'general'], 'split');
+    expect([...result.keys()]).toEqual(['sub-string', 'string']);
   });
 
   test('should create fork', () => {

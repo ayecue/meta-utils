@@ -1,0 +1,18 @@
+{
+  "type": "not-searchable",
+  "extends": "string",
+  "definitions": {
+    "hello": {
+      "type": "function",
+      "arguments": [
+        {
+          "label": "foo",
+          "type": "number"
+        }
+      ],
+      "returns": [
+        "number"
+      ]
+    }
+  }
+}

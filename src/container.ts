@@ -3,11 +3,6 @@ import { SignatureDefinition } from "./signatures/signature-definition";
 import { DescriptionsPayload, SignaturePayload } from "./types/payloads";
 import { DescriptionContainerItem, SignatureDefinitionBaseType, SignatureDefinitionType } from "./types/signature-definition";
 
-export interface InternalState {
-  general: Signature;
-  any: Signature;
-}
-
 export interface AddTypeSignatureOptions {
   type: string;
   extend?: string;
@@ -15,38 +10,62 @@ export interface AddTypeSignatureOptions {
 }
 
 export class Container {
-  private internal: InternalState;
-  private types: Map<SignatureDefinitionType, Signature>;
+  private _primitives: Map<SignatureDefinitionBaseType, Signature>;
+  private _types: Map<SignatureDefinitionType, Signature>;
+  private _excludeFromSearch: Set<SignatureDefinitionType>;
+
+  get primitives() {
+    return this._primitives;
+  }
+
+  get types() {
+    return this._types;
+  }
+
+  get excludeFromSearch() {
+    return this._excludeFromSearch;
+  }
 
   constructor() {
-    this.internal = {
-      any: new Signature(SignatureDefinitionBaseType.Any),
-      general: new Signature(SignatureDefinitionBaseType.General)
-    };
-    this.types = new Map([
+    this._primitives = new Map([
+      [SignatureDefinitionBaseType.Any, new Signature(SignatureDefinitionBaseType.Any)],
+      [SignatureDefinitionBaseType.General, new Signature(SignatureDefinitionBaseType.General)],
       [SignatureDefinitionBaseType.String, new Signature(SignatureDefinitionBaseType.String)],
       [SignatureDefinitionBaseType.Function, new Signature(SignatureDefinitionBaseType.Function)],
       [SignatureDefinitionBaseType.Number, new Signature(SignatureDefinitionBaseType.Number)],
       [SignatureDefinitionBaseType.List, new Signature(SignatureDefinitionBaseType.List)],
       [SignatureDefinitionBaseType.Map, new Signature(SignatureDefinitionBaseType.Map)]
     ]);
+    this._types = new Map();
+    this._excludeFromSearch = new Set();
   }
 
   private getOrCreateTypeSignature(type: SignatureDefinitionType) {
     let signature = this.getTypeSignature(type);
     if (signature == null) {
       signature = new Signature(type);
-      this.types.set(type, signature);
+      this._types.set(type, signature);
     }
     return signature;
   }
 
   getTypeSignature(type: SignatureDefinitionType): Signature | null {
-    switch (type) {
-      case SignatureDefinitionBaseType.General: return this.internal.general;
-      case SignatureDefinitionBaseType.Any: return this.internal.any;
-      default: return this.types.get(type) ?? null;
-    }
+    return this._primitives.get(type as SignatureDefinitionBaseType) ?? this._types.get(type) ?? null;
+  }
+
+  getAllPrimitiveSignatures(): Signature[] {
+    return Array.from(this._primitives.values());
+  }
+
+  getAllTypeSignatures(): Signature[] {
+    return Array.from(this._types.values());
+  }
+
+  getAllSignatures() {
+    return [
+      ...this.getAllPrimitiveSignatures(),
+      ...this.getAllTypeSignatures()
+    ];
   }
 
   addTypeSignatureFromPayload(payload: SignaturePayload): this {
@@ -80,11 +99,7 @@ export class Container {
   }
 
   addMeta(language: string, meta: Record<SignatureDefinitionType, Record<string, DescriptionContainerItem>>): this {
-    const { general: generalMeta, any: anyMeta, ...metaForTypes } = meta;
-    const keys = Object.keys(metaForTypes);
-
-    if (generalMeta != null) this.internal.general.addDescriptions(language, generalMeta);
-    if (anyMeta != null) this.internal.any.addDescriptions(language, anyMeta);
+    const keys = Object.keys(meta);
 
     for (const key of keys) {
       const type = this.getOrCreateTypeSignature(key);
@@ -94,11 +109,13 @@ export class Container {
     return this;
   }
 
-  getDefinitionMatches(types: string | SignatureDefinitionType[], property: string, language: string = 'en'): Map<SignatureDefinitionType, SignatureDefinition> {
-    if (typeof types === 'string') return this.getDefinitionMatches([types], property, language);
+  searchDefinitionMatches(types: string | SignatureDefinitionType[], property: string, language: string = 'en'): Map<SignatureDefinitionType, SignatureDefinition> {
+    if (typeof types === 'string') return this.searchDefinitionMatches([types], property, language);
     const matches: Map<SignatureDefinitionType, SignatureDefinition> = new Map();
 
     for (const type of types) {
+      if (this._excludeFromSearch.has(type)) continue;
+
       let currentType = type;
       let current = this.getTypeSignature(type);
       let match: SignatureDefinition = null;
@@ -119,7 +136,7 @@ export class Container {
 
   getDefinition(types: SignatureDefinitionType | SignatureDefinitionType[], property: string, language: string = 'en'): SignatureDefinition | null {
     if (typeof types === 'string') return this.getDefinition([types], property, language);
-    const matches = this.getDefinitionMatches(types, property, language);
+    const matches = this.searchDefinitionMatches(types, property, language);
 
     if (matches.size === 0) {
       return null;
@@ -131,7 +148,7 @@ export class Container {
       return matches.get(SignatureDefinitionBaseType.Any);
     }
 
-    const internalAnyDef = this.internal.any.getDefinition(property, language);
+    const internalAnyDef = this._primitives.get(SignatureDefinitionBaseType.Any).getDefinition(property, language);
 
     if (internalAnyDef !== null) {
       return internalAnyDef;
@@ -143,22 +160,13 @@ export class Container {
   fork() {
     const container = new Container();
 
-    container.internal.any = this.internal.any.copy();
-    container.internal.general = this.internal.general.copy();
-
-    for (const typeSignature of container.types.values()) {
-      container.addTypeSignature({
-        type: typeSignature.type,
-        extend: typeSignature.extend,
-        definitions: typeSignature.definitions
-      });
-      const signature = container.getTypeSignature(typeSignature.type);
-      const languages = Object.keys(signature.descriptions);
-
-      for (const language of languages) {
-        signature.setDescriptions(language, signature.descriptions[language]);
-      }
+    for (const [key, value] of this._primitives) {
+      container._primitives.set(key, value.copy());
+    };
+    for (const [key, value] of this._types) {
+      container._types.set(key, value.copy());
     }
+    container._excludeFromSearch = new Set(this._excludeFromSearch);
 
     return container;
   }
