@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`collection should return definition 1`] = `
+Object {
+  "arguments": Array [
+    Object {
+      "default": null,
+      "label": "delimiter",
+      "opt": false,
+      "type": "string",
+    },
+  ],
+  "description": "Returns a \`list\` where each item is a segment of the \`string\`. The separation depends on the provided separator \`string\`. Keep in mind that for some odd reason, this method is using regular expressions for matching.",
+  "example": Array [
+    "myString = \\"42 as an answer is wrong\\"",
+    "segments = myString.split(\\" \\")",
+    "if segments[0] != \\"42\\" then",
+    "   print(\\"Invalid information spotted!\\")",
+    "else",
+    "   print(\\"Information seems valid!\\")",
+    "end if",
+  ],
+  "isProtected": false,
+  "returns": Array [
+    "list:string",
+  ],
+  "type": "function",
+}
+`;
+
+exports[`collection should return definitions of parent definition 1`] = `
+Object {
+  "arguments": Array [
+    Object {
+      "default": null,
+      "label": "delimiter",
+      "opt": false,
+      "type": "string",
+    },
+  ],
+  "description": "Returns a \`list\` where each item is a segment of the \`string\`. The separation depends on the provided separator \`string\`. Keep in mind that for some odd reason, this method is using regular expressions for matching.",
+  "example": Array [
+    "myString = \\"42 as an answer is wrong\\"",
+    "segments = myString.split(\\" \\")",
+    "if segments[0] != \\"42\\" then",
+    "   print(\\"Invalid information spotted!\\")",
+    "else",
+    "   print(\\"Information seems valid!\\")",
+    "end if",
+  ],
+  "isProtected": false,
+  "returns": Array [
+    "list:string",
+  ],
+  "type": "function",
+}
+`;
+
+exports[`collection should return property definition 1`] = `
+Object {
+  "description": "Test, test!",
+  "example": Array [
+    "testing",
+  ],
+  "isProtected": true,
+  "type": Object {
+    "type": "list",
+    "valueType": "string",
+  },
+}
+`;
+
+exports[`collection should return signatures 1`] = `
+Object {
+  "definitions": Object {
+    "hasIndex": Object {
+      "arguments": Array [
+        Object {
+          "default": null,
+          "label": "value",
+          "opt": false,
+          "type": "any",
+        },
+        Object {
+          "default": null,
+          "label": "index",
+          "opt": false,
+          "type": "any",
+        },
+      ],
+      "description": null,
+      "example": null,
+      "isProtected": false,
+      "returns": Array [
+        "number",
+      ],
+      "type": "function",
+    },
+    "print": Object {
+      "arguments": Array [
+        Object {
+          "default": "\\"\\"",
+          "label": "value",
+          "opt": false,
+          "type": "any",
+        },
+        Object {
+          "default": null,
+          "label": "delimiter",
+          "opt": true,
+          "type": "string",
+        },
+      ],
+      "description": null,
+      "example": null,
+      "isProtected": false,
+      "returns": Array [
+        "null",
+      ],
+      "type": "function",
+    },
+  },
+  "extend": null,
+  "type": "general",
+}
+`;

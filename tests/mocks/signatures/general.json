@@ -1,36 +1,39 @@
 {
-  "hasIndex": {
-    "type": "function",
-    "arguments": [
-      {
-        "label": "value",
-        "type": "any"
-      },
-      {
-        "label": "index",
-        "type": "any"
-      }
-    ],
-    "returns": [
-      "number"
-    ]
-  },
-  "print": {
-    "type": "function",
-    "arguments": [
-      {
-        "label": "value",
-        "type": "any",
-        "default": "\"\""
-      },
-      {
-        "label": "delimiter",
-        "type": "string",
-        "opt": true
-      }
-    ],
-    "returns": [
-      "null"
-    ]
+  "type": "general",
+  "definitions": {
+    "hasIndex": {
+      "type": "function",
+      "arguments": [
+        {
+          "label": "value",
+          "type": "any"
+        },
+        {
+          "label": "index",
+          "type": "any"
+        }
+      ],
+      "returns": [
+        "number"
+      ]
+    },
+    "print": {
+      "type": "function",
+      "arguments": [
+        {
+          "label": "value",
+          "type": "any",
+          "default": "\"\""
+        },
+        {
+          "label": "delimiter",
+          "type": "string",
+          "opt": true
+        }
+      ],
+      "returns": [
+        "null"
+      ]
+    }
   }
 }
