@@ -34,6 +34,18 @@ export class SignatureDefinitionTypeMeta {
     this.valueType = options.valueType ?? null;
   }
 
+  toString() {
+    if (this.keyType === null) {
+      if (this.valueType === null) {
+        return this.type;
+      }
+
+      return `${this.type}<${this.valueType}>`;
+    }
+
+    return `${this.type}<${this.keyType}, ${this.valueType}>`;
+  }
+
   toJSON():
     | { type: string; valueType: string }
     | { type: string; keyType: string; valueType: string }

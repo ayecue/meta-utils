@@ -111,9 +111,10 @@ export class Container {
 
   searchDefinitionMatches(types: string | SignatureDefinitionType[], property: string, language: string = 'en'): Map<SignatureDefinitionType, SignatureDefinition> {
     if (typeof types === 'string') return this.searchDefinitionMatches([types], property, language);
+    const typesSet = new Set(types);
     const matches: Map<SignatureDefinitionType, SignatureDefinition> = new Map();
 
-    for (const type of types) {
+    for (const type of typesSet) {
       if (this._excludeFromSearch.has(type)) continue;
 
       let currentType = type;
