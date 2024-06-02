@@ -1,11 +1,23 @@
 import Joi from 'joi';
 import { SignatureDefinitionBaseType } from './types/signature-definition';
 
-export const signatureDefinitionTypeSchema = Joi.alternatives(Joi.string(), Joi.object({
-  type: Joi.string().required(),
-  keyType: Joi.string().optional(),
-  valueType: Joi.string().optional(),
-}));
+export const signatureDefinitionTypeSchema = Joi.alternatives(
+  Joi.string().invalid(SignatureDefinitionBaseType.Map, SignatureDefinitionBaseType.List),
+  Joi.object({
+    type: Joi.string().invalid(SignatureDefinitionBaseType.Map, SignatureDefinitionBaseType.List).required(),
+    keyType: Joi.string().optional(),
+    valueType: Joi.string().optional(),
+  }),
+  Joi.object({
+    type: Joi.string().valid(SignatureDefinitionBaseType.Map),
+    keyType: Joi.string().required(),
+    valueType: Joi.string().required(),
+  }),
+  Joi.object({
+    type: Joi.string().valid(SignatureDefinitionBaseType.List),
+    valueType: Joi.string().required(),
+  })
+);
 
 export const signatureDefinitionContainerSchema = Joi.object().pattern(
   Joi.string(),

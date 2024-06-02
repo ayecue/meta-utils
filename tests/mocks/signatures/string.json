@@ -68,7 +68,10 @@
         }
       ],
       "returns": [
-        "list:string"
+        {
+          "type": "list",
+          "valueType": "string"
+        }
       ]
     },
     "replace": {
@@ -96,7 +99,10 @@
     "indexes": {
       "type": "function",
       "returns": [
-        "list:number"
+        {
+          "type": "list",
+          "valueType": "number"
+        }
       ]
     },
     "code": {
@@ -132,7 +138,10 @@
     "values": {
       "type": "function",
       "returns": [
-        "list:string"
+        {
+          "type": "list",
+          "valueType": "string"
+        }
       ]
     }
   }
