@@ -11,7 +11,7 @@ export interface InternalState {
 export interface AddTypeSignatureOptions {
   type: string;
   extend?: string;
-  definitions: Map<string, SignatureDefinition>;
+  definitions: Record<string, SignatureDefinition>;
 }
 
 export class Container {
@@ -62,7 +62,7 @@ export class Container {
   addTypeSignature(options: AddTypeSignatureOptions): this {
     const signature = this.getOrCreateTypeSignature(options.type);
     if (options.extend !== undefined) signature.setExtend(options.extend);
-    signature.mergeDefinitions(Object.fromEntries(options.definitions));
+    signature.mergeDefinitions(options.definitions);
     return this;
   }
 
@@ -153,9 +153,10 @@ export class Container {
         definitions: typeSignature.definitions
       });
       const signature = container.getTypeSignature(typeSignature.type);
+      const languages = Object.keys(signature.descriptions);
 
-      for (const [language, item] of signature.descriptions) {
-        signature.setDescriptions(language, item);
+      for (const language of languages) {
+        signature.setDescriptions(language, signature.descriptions[language]);
       }
     }
 

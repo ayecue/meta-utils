@@ -85,8 +85,11 @@ export class Signature {
 
   private _type: SignatureDefinitionType;
   private _extend: SignatureDefinitionType | null;
-  private _definitions: Map<string, SignatureDefinition>;
-  private _descriptions: Map<string, Record<string, DescriptionContainerItem>>;
+  private _definitions: Record<string, SignatureDefinition>;
+  private _descriptions: Record<
+    string,
+    Record<string, DescriptionContainerItem>
+  >;
 
   get type() {
     return this._type;
@@ -107,8 +110,8 @@ export class Signature {
   constructor(type: SignatureDefinitionType, extend?: SignatureDefinitionType) {
     this._type = type;
     this._extend = extend ?? null;
-    this._descriptions = new Map();
-    this._definitions = new Map();
+    this._descriptions = {};
+    this._definitions = {};
   }
 
   setExtend(type: SignatureDefinitionType | null): this {
@@ -117,7 +120,7 @@ export class Signature {
   }
 
   setDefinition(definitions: Record<string, SignatureDefinition>): this {
-    this._definitions = new Map(Object.entries(definitions));
+    this._definitions = definitions;
     return this;
   }
 
@@ -125,7 +128,7 @@ export class Signature {
     const keys = Object.keys(definitions);
 
     for (const key of keys) {
-      this._definitions.set(key, definitions[key]);
+      this._definitions[key] = definitions[key];
     }
 
     return this;
@@ -135,7 +138,7 @@ export class Signature {
     property: string,
     language?: string
   ): SignatureDefinition | null {
-    const definition = this._definitions.get(property);
+    const definition = this._definitions[property];
     if (definition == null) return null;
     const description = this.getDescriptions(language);
     const descriptionItem = description[property];
@@ -147,7 +150,7 @@ export class Signature {
     language: string,
     input: Record<string, DescriptionContainerItem>
   ) {
-    this._descriptions.set(language, input);
+    this._descriptions[language] = input;
     return this;
   }
 
@@ -155,8 +158,14 @@ export class Signature {
     language: string,
     input: Record<string, DescriptionContainerItem>
   ) {
-    const descriptions: Record<string, DescriptionContainerItem> =
-      this._descriptions.get(language) ?? {};
+    let descriptions: Record<string, DescriptionContainerItem> =
+      this._descriptions[language];
+
+    if (descriptions == null) {
+      descriptions = {};
+      this._descriptions[language] = descriptions;
+    }
+
     const keys = Object.keys(input);
 
     for (const key of keys) {
@@ -166,15 +175,13 @@ export class Signature {
       };
     }
 
-    this._descriptions.set(language, descriptions);
-
     return this;
   }
 
   getDescriptions(
     language: string = 'en'
   ): Record<string, DescriptionContainerItem> {
-    const descriptions = this._descriptions.get(language);
+    const descriptions = this._descriptions[language];
 
     if (descriptions != null) {
       return descriptions;
@@ -188,9 +195,10 @@ export class Signature {
       string,
       ReturnType<SignatureDefinition['toJSON']>
     > = {};
+    const keys = Object.keys(this._definitions);
 
-    for (const [key, value] of this.definitions) {
-      definitions[key] = value.toJSON();
+    for (const key of keys) {
+      definitions[key] = this._definitions[key].toJSON();
     }
 
     return {
@@ -202,16 +210,18 @@ export class Signature {
 
   copy() {
     const signature = new Signature(this._type);
-    const definitions = new Map();
+    const definitions: Signature['definitions'] = {};
+    const definitionKeys = Object.keys(this._definitions);
 
-    for (const [key, value] of this._definitions) {
-      definitions.set(key, value.copy());
+    for (const key of definitionKeys) {
+      definitions[key] = this._definitions[key].copy();
     }
 
-    const descriptions = new Map();
+    const descriptions: Signature['descriptions'] = {};
+    const descriptionsKeys = Object.keys(this._definitions);
 
-    for (const [key, value] of this._descriptions) {
-      descriptions.set(key, { ...value });
+    for (const key of descriptionsKeys) {
+      descriptions[key] = { ...descriptions[key] };
     }
 
     signature._descriptions = descriptions;
