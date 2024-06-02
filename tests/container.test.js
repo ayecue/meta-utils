@@ -40,6 +40,10 @@ describe('container', () => {
     expect(meta.getDefinition('general', 'print').example).toEqual(EN.general.print.example);
   });
 
+  test('should return arg default', () => {
+    expect(meta.getDefinition('general', 'print').getArgument('value').default.value).toEqual('');
+  });
+
   test('should return definition', () => {
     expect(meta.getDefinition(['string'], 'split').toJSON()).toMatchSnapshot();
   });

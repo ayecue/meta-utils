@@ -14,3 +14,8 @@ export interface DescriptionContainerItem {
   description: string;
   example: string[] | null;
 }
+
+export interface SignatureDefinitionFunctionArgDefault {
+  type: SignatureDefinitionBaseType.Number | SignatureDefinitionBaseType.String;
+  value: number | string;
+}

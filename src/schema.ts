@@ -19,32 +19,49 @@ export const signatureDefinitionTypeSchema = Joi.alternatives(
   })
 );
 
+export const signatureDefinitionFunctionSchemaArgDefaultString = Joi.object({
+  type: Joi.string().valid(SignatureDefinitionBaseType.String).required(),
+  value: Joi.string().allow('').required()
+});
+
+export const signatureDefinitionFunctionSchemaArgDefaultNumber = Joi.object({
+  type: Joi.string().valid(SignatureDefinitionBaseType.Number).required(),
+  value: Joi.number().required()
+});
+
+export const signatureDefinitionFunctionSchemaArg = Joi.object({
+  label: Joi.string().required(),
+  type: signatureDefinitionTypeSchema.required(),
+  opt: Joi.boolean().optional(),
+  default: Joi.alternatives(
+    signatureDefinitionFunctionSchemaArgDefaultString,
+    signatureDefinitionFunctionSchemaArgDefaultNumber
+  ).optional()
+});
+
+export const signatureDefinitionFunctionSchema = Joi.object({
+  type: Joi.string().valid(SignatureDefinitionBaseType.Function).required(),
+  description: Joi.string().optional(),
+  example: Joi.string().optional(),
+  isProtected: Joi.boolean().optional(),
+  arguments: Joi.array()
+    .items(signatureDefinitionFunctionSchemaArg)
+    .optional(),
+  returns: Joi.array().items(signatureDefinitionTypeSchema).required()
+});
+
+export const signatureDefinitionSchema = Joi.object({
+  type: signatureDefinitionTypeSchema.invalid(SignatureDefinitionBaseType.Function).required(),
+  description: Joi.string().optional(),
+  example: Joi.string().optional(),
+  isProtected: Joi.boolean().optional()
+});
+
 export const signatureDefinitionContainerSchema = Joi.object().pattern(
   Joi.string(),
   Joi.alternatives(
-    Joi.object({
-      type: Joi.string().valid(SignatureDefinitionBaseType.Function).required(),
-      description: Joi.string().optional(),
-      example: Joi.string().optional(),
-      isProtected: Joi.boolean().optional(),
-      arguments: Joi.array()
-        .items(
-          Joi.object({
-            label: Joi.string().required(),
-            type: signatureDefinitionTypeSchema.required(),
-            opt: Joi.boolean().optional(),
-            default: Joi.string().optional()
-          })
-        )
-        .optional(),
-      returns: Joi.array().items(signatureDefinitionTypeSchema).required()
-    }),
-    Joi.object({
-      type: signatureDefinitionTypeSchema.invalid(SignatureDefinitionBaseType.Function).required(),
-      description: Joi.string().optional(),
-      example: Joi.string().optional(),
-      isProtected: Joi.boolean().optional()
-    })
+    signatureDefinitionFunctionSchema,
+    signatureDefinitionSchema
   )
 );
 

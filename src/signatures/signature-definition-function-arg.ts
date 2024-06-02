@@ -1,18 +1,19 @@
 import { SignaturePayloadDefinitionArg } from '../types/payloads';
+import { SignatureDefinitionFunctionArgDefault } from '../types/signature-definition';
 import { SignatureDefinitionTypeMeta } from './signature-definition-type-meta';
 
 export interface SignatureDefinitionFunctionArgOptions {
   label: string;
   type: SignatureDefinitionTypeMeta;
   opt: boolean;
-  default: string | null;
+  default: SignatureDefinitionFunctionArgDefault | null;
 }
 
 export class SignatureDefinitionFunctionArg {
   readonly label: string;
   readonly type: SignatureDefinitionTypeMeta;
   readonly opt: boolean;
-  readonly default: string | null;
+  readonly default: SignatureDefinitionFunctionArgDefault | null;
 
   static parse(payload: SignaturePayloadDefinitionArg) {
     return new SignatureDefinitionFunctionArg({

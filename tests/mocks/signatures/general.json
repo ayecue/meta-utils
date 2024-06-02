@@ -10,7 +10,11 @@
         },
         {
           "label": "index",
-          "type": "any"
+          "type": "any",
+          "default": {
+            "type": "number",
+            "value": 0
+          }
         }
       ],
       "returns": [
@@ -23,7 +27,10 @@
         {
           "label": "value",
           "type": "any",
-          "default": "\"\""
+          "default": {
+            "type": "string",
+            "value": ""
+          }
         },
         {
           "label": "delimiter",

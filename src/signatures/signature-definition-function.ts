@@ -51,6 +51,16 @@ export class SignatureDefinitionFunction extends SignatureDefinition {
     this.returns = options.returns;
   }
 
+  getArgument(label: string): SignatureDefinitionFunctionArg | null {
+    const index = this.arguments.findIndex((item) => item.label === label);
+
+    if (index === -1) {
+      return null;
+    }
+
+    return this.arguments[index];
+  }
+
   setDescription(payload: DescriptionPayloadEntry): this {
     this.description = payload.description;
     this.example = payload.example ?? null;

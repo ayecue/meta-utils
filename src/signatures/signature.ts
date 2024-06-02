@@ -30,8 +30,8 @@ export class Signature {
       const parsed =
         value.type === SignatureDefinitionBaseType.Function
           ? SignatureDefinitionFunction.parse(
-            value as SignaturePayloadDefinitionFunction
-          )
+              value as SignaturePayloadDefinitionFunction
+            )
           : SignatureDefinition.parse(value);
 
       definitions[key] = parsed;

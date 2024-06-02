@@ -1,4 +1,7 @@
-import { SignatureDefinitionType } from './signature-definition';
+import {
+  SignatureDefinitionFunctionArgDefault,
+  SignatureDefinitionType
+} from './signature-definition';
 
 export interface DescriptionPayloadEntry {
   description: string;
@@ -28,7 +31,7 @@ export interface SignaturePayloadDefinitionArg {
   label: string;
   type: SignaturePayloadDefinitionType;
   opt?: boolean;
-  default?: string;
+  default?: SignatureDefinitionFunctionArgDefault;
 }
 
 export interface SignaturePayloadDefinition {
