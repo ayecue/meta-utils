@@ -52,8 +52,6 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "fast-clone": "^1.5.13",
-    "joi": "^17.13.1",
-    "memoizee": "^0.4.15"
+    "joi": "^17.13.1"
   }
 }
