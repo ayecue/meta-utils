@@ -1,0 +1,21 @@
+{
+  "type": "any",
+  "definitions": {
+    "hasIndex": {
+      "type": "function",
+      "arguments": [
+        {
+          "label": "foo",
+          "type": "any"
+        },
+        {
+          "label": "bar",
+          "type": "any"
+        }
+      ],
+      "returns": [
+        "number"
+      ]
+    }
+  }
+}

@@ -1,4 +1,5 @@
 const { Container, Signature } = require('../dist');
+const AnySignatures = require('./mocks/signatures/any.json');
 const GeneralSignatures = require('./mocks/signatures/general.json');
 const StringSignatures = require('./mocks/signatures/string.json');
 const SubStringSignatures = require('./mocks/signatures/sub-string.json');
@@ -11,6 +12,7 @@ describe('collection', () => {
   beforeEach(() => {
     meta = new Container();
 
+    meta.addTypeSignatureFromPayload(AnySignatures);
     meta.addTypeSignatureFromPayload(GeneralSignatures);
     meta.addTypeSignatureFromPayload(StringSignatures);
     meta.addTypeSignatureFromPayload(SubStringSignatures);
@@ -23,6 +25,11 @@ describe('collection', () => {
 
   test('should return signatures', () => {
     expect(meta.getTypeSignature('general').toJSON()).toEqual(Signature.parse(GeneralSignatures).toJSON());
+  });
+
+  test('should return any signature', () => {
+    expect(meta.getDefinition(['general', 'string'], 'hasIndex').arguments.map((item) => item.label)).toEqual(AnySignatures.definitions.hasIndex.arguments.map((item) => item.label));
+    expect(meta.getDefinition('any', 'hasIndex').arguments.map((item) => item.label)).toEqual(AnySignatures.definitions.hasIndex.arguments.map((item) => item.label));
   });
 
   test('should return description', () => {

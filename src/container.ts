@@ -137,6 +137,12 @@ export class Container {
 
   getDefinition(types: SignatureDefinitionType | SignatureDefinitionType[], property: string, language: string = 'en'): SignatureDefinition | null {
     if (typeof types === 'string') return this.getDefinition([types], property, language);
+    const internalAnyDef = this._primitives.get(SignatureDefinitionBaseType.Any).getDefinition(property, language);
+
+    if (types.includes(SignatureDefinitionBaseType.Any) && internalAnyDef) {
+      return internalAnyDef;
+    }
+
     const matches = this.searchDefinitionMatches(types, property, language);
 
     if (matches.size === 0) {
@@ -148,8 +154,6 @@ export class Container {
     if (matches.has(SignatureDefinitionBaseType.Any)) {
       return matches.get(SignatureDefinitionBaseType.Any);
     }
-
-    const internalAnyDef = this._primitives.get(SignatureDefinitionBaseType.Any).getDefinition(property, language);
 
     if (internalAnyDef !== null) {
       return internalAnyDef;
