@@ -20,7 +20,7 @@ describe('container', () => {
 
     meta.excludeFromSearch.add('not-searchable');
 
-    meta.addMeta('en', EN);
+    meta.addMetaFromPayload('en', EN);
   });
 
   test('should return signatures', () => {

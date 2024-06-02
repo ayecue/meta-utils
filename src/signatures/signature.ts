@@ -30,8 +30,8 @@ export class Signature {
       const parsed =
         value.type === SignatureDefinitionBaseType.Function
           ? SignatureDefinitionFunction.parse(
-              value as SignaturePayloadDefinitionFunction
-            )
+            value as SignaturePayloadDefinitionFunction
+          )
           : SignatureDefinition.parse(value);
 
       definitions[key] = parsed;
@@ -45,7 +45,15 @@ export class Signature {
   ): Record<string, DescriptionContainerItem> {
     Joi.assert(payload, descriptionContainerSchema);
 
-    const { $meta, ...records } = payload;
+    let records = payload;
+    let $meta = null;
+
+    if (records.$meta) {
+      const { $meta: $0, ...$1 } = payload;
+      $meta = $0;
+      records = $1;
+    }
+
     const descriptions: Record<string, DescriptionContainerItem> = {};
 
     for (const [key, value] of Object.entries(records)) {

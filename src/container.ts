@@ -90,7 +90,7 @@ export class Container {
     const keys = Object.keys(payload);
 
     for (const key of keys) {
-      const parsed = Signature.parseDescriptions(meta[key]);
+      const parsed = Signature.parseDescriptions(payload[key]);
       meta[key] = parsed;
     }
 
