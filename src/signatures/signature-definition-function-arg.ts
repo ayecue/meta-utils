@@ -9,10 +9,10 @@ export interface SignatureDefinitionFunctionArgOptions {
 }
 
 export class SignatureDefinitionFunctionArg {
-  label: string;
-  type: SignatureDefinitionTypeMeta;
-  opt: boolean;
-  default: string | null;
+  readonly label: string;
+  readonly type: SignatureDefinitionTypeMeta;
+  readonly opt: boolean;
+  readonly default: string | null;
 
   static parse(payload: SignaturePayloadDefinitionArg) {
     return new SignatureDefinitionFunctionArg({

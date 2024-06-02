@@ -21,8 +21,8 @@ export interface SignatureDefinitionFunctionOptions
 }
 
 export class SignatureDefinitionFunction extends SignatureDefinition {
-  arguments: SignatureDefinitionFunctionArg[];
-  returns: SignatureDefinitionTypeMeta[];
+  readonly arguments: SignatureDefinitionFunctionArg[];
+  readonly returns: SignatureDefinitionTypeMeta[];
 
   static parse(
     payload: SignaturePayloadDefinitionFunction

@@ -8,9 +8,9 @@ export interface SignatureDefinitionTypeMetaOptions {
 }
 
 export class SignatureDefinitionTypeMeta {
-  type: SignatureDefinitionType;
-  keyType: SignatureDefinitionType | null;
-  valueType: SignatureDefinitionType | null;
+  readonly type: SignatureDefinitionType;
+  readonly keyType: SignatureDefinitionType | null;
+  readonly valueType: SignatureDefinitionType | null;
 
   static parse(
     value: SignaturePayloadDefinitionType

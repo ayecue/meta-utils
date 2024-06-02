@@ -13,8 +13,8 @@ export interface SignatureDefinitionOptions {
 }
 
 export class SignatureDefinition {
-  type: SignatureDefinitionTypeMeta;
-  isProtected: boolean;
+  readonly type: SignatureDefinitionTypeMeta;
+  readonly isProtected: boolean;
   description: string | null;
   example: string[] | null;
 
