@@ -18,7 +18,7 @@ describe('container', () => {
     meta.addTypeSignatureFromPayload(SubStringSignatures);
     meta.addTypeSignatureFromPayload(NotSearchableSignature);
 
-    meta.excludeFromSearch.add('not-searchable');
+    meta.excludeFromSearch('not-searchable');
 
     meta.addMetaFromPayload('en', EN);
   });
@@ -33,11 +33,11 @@ describe('container', () => {
   });
 
   test('should return description', () => {
-    expect(meta.getDefinition('general', 'print').description).toEqual(EN.general.print.description);
+    expect(meta.getDefinition('general', 'print').getDescription()).toEqual(EN.general.print.description);
   });
 
   test('should return example', () => {
-    expect(meta.getDefinition('general', 'print').example).toEqual(EN.general.print.example);
+    expect(meta.getDefinition('general', 'print').getExample()).toEqual(EN.general.print.example);
   });
 
   test('should return arg default', () => {
@@ -46,6 +46,14 @@ describe('container', () => {
 
   test('should return definition', () => {
     expect(meta.getDefinition(['string'], 'split').toJSON()).toMatchSnapshot();
+  });
+
+  test('should return variations', () => {
+    expect(meta.getDefinition(['sub-string'], 'myProperty').getVariations()).toEqual([1, 'foo']);
+  });
+
+  test('should return returnVariations', () => {
+    expect(meta.getDefinition(['sub-string'], 'remove2').getReturnVariations()).toEqual([123]);
   });
 
   test('should return property definition', () => {
@@ -89,7 +97,7 @@ describe('container', () => {
       }
     });
 
-    expect(result.getDefinition('general', 'print').description).toEqual('test');
-    expect(meta.getDefinition('general', 'print').description).toEqual(EN.general.print.description);
+    expect(result.getDefinition('general', 'print').getDescription()).toEqual('test');
+    expect(meta.getDefinition('general', 'print').getDescription()).toEqual(EN.general.print.description);
   });
 });

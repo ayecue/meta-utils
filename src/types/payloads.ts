@@ -1,6 +1,7 @@
 import {
   SignatureDefinitionFunctionArgDefault,
-  SignatureDefinitionType
+  SignatureDefinitionType,
+  Variation
 } from './signature-definition';
 
 export interface DescriptionPayloadEntry {
@@ -40,12 +41,14 @@ export interface SignaturePayloadDefinition {
   isProtected?: boolean;
   description?: string;
   example?: string[];
+  variations?: Variation[];
 }
 
 export interface SignaturePayloadDefinitionFunction
   extends SignaturePayloadDefinition {
   arguments?: SignaturePayloadDefinitionArg[];
   returns: SignaturePayloadDefinitionType[];
+  returnVariations?: Variation[];
 }
 
 export type SignaturePayloadDefinitionContainer = {
@@ -57,5 +60,6 @@ export type SignaturePayloadDefinitionContainer = {
 export interface SignaturePayload {
   type: string;
   extends?: string;
+  hidden?: boolean;
   definitions: SignaturePayloadDefinitionContainer;
 }

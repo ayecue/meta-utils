@@ -1,10 +1,8 @@
-import {
-  DescriptionPayloadEntry,
-  SignaturePayloadDefinitionFunction
-} from '../types/payloads';
+import { SignaturePayloadDefinitionFunction } from '../types/payloads';
 import {
   DescriptionContainerItem,
-  SignatureDefinitionBaseType
+  SignatureDefinitionBaseType,
+  Variation
 } from '../types/signature-definition';
 import {
   SignatureDefinition,
@@ -18,12 +16,14 @@ export interface SignatureDefinitionFunctionOptions
   type: SignatureDefinitionTypeMeta;
   arguments: SignatureDefinitionFunctionArg[];
   returns: SignatureDefinitionTypeMeta[];
+  returnVariations: Variation[] | null;
 }
 
 export class SignatureDefinitionFunction extends SignatureDefinition {
   private _argList: string[];
   private _argRefs: Map<string, SignatureDefinitionFunctionArg>;
   private _returns: Map<string, SignatureDefinitionTypeMeta>;
+  private _returnVariations: Variation[] | null;
 
   static parse(
     payload: SignaturePayloadDefinitionFunction
@@ -37,7 +37,9 @@ export class SignatureDefinitionFunction extends SignatureDefinition {
       example: payload.example ?? null,
       arguments:
         payload.arguments?.map(SignatureDefinitionFunctionArg.parse) ?? [],
-      returns: payload.returns.map(SignatureDefinitionTypeMeta.parse)
+      returns: payload.returns.map(SignatureDefinitionTypeMeta.parse),
+      variations: payload.variations,
+      returnVariations: payload.returnVariations ?? null
     });
   }
 
@@ -46,7 +48,8 @@ export class SignatureDefinitionFunction extends SignatureDefinition {
       type: options.type,
       isProtected: options.isProtected,
       description: options.description,
-      example: options.example
+      example: options.example,
+      variations: options.variations
     });
     this._argList = options.arguments.map((item) => item.getLabel());
     this._argRefs = options.arguments.reduce<
@@ -59,6 +62,7 @@ export class SignatureDefinitionFunction extends SignatureDefinition {
     >((result, returnVal) => {
       return result.set(returnVal.type, returnVal);
     }, new Map());
+    this._returnVariations = options.returnVariations;
   }
 
   getArguments(): SignatureDefinitionFunctionArg[] {
@@ -73,6 +77,18 @@ export class SignatureDefinitionFunction extends SignatureDefinition {
     return [...this._returns.values()];
   }
 
+  addReturnVariation(variation: Variation): this {
+    if (this._returnVariations == null) {
+      this._returnVariations = [];
+    }
+    this._returnVariations.push(variation);
+    return this;
+  }
+
+  getReturnVariations() {
+    return this._returnVariations;
+  }
+
   toJSON() {
     return {
       ...super.toJSON(),
@@ -83,23 +99,27 @@ export class SignatureDefinitionFunction extends SignatureDefinition {
 
   withDescription(item: DescriptionContainerItem | null): SignatureDefinition {
     return new SignatureDefinitionFunction({
-      type: this.type,
-      isProtected: this.isProtected,
+      type: this._type,
+      isProtected: this._isProtected,
       arguments: this.getArguments(),
       returns: this.getReturns(),
-      description: item?.description ?? this.description,
-      example: item?.example ?? this.example
+      description: item?.description ?? this._description,
+      example: item?.example ?? this._example,
+      variations: this._variations,
+      returnVariations: this._returnVariations
     });
   }
 
   copy() {
     return new SignatureDefinitionFunction({
-      type: this.type.copy(),
-      isProtected: this.isProtected,
+      type: this._type.copy(),
+      isProtected: this._isProtected,
       arguments: this.getArguments().map((item) => item.copy()),
       returns: this.getReturns().map((item) => item.copy()),
-      description: this.description,
-      example: this.example
+      description: this._description,
+      example: this._example,
+      variations: this._variations,
+      returnVariations: this._returnVariations
     });
   }
 }

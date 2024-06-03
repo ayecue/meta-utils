@@ -12,6 +12,9 @@
       ],
       "returns": [
         "string"
+      ],
+      "returnVariations": [
+        123
       ]
     },
     "myProperty": {
@@ -19,7 +22,11 @@
         "type": "list",
         "valueType": "string"
       },
-      "isProtected": true
+      "isProtected": true,
+      "variations": [
+        1,
+        "foo"
+      ]
     },
     "split": {
       "type": "function",

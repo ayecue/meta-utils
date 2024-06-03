@@ -1,40 +1,22 @@
-import { Signature } from "./signatures/signature";
+import { Signature, SignatureOptions } from "./signatures/signature";
 import { SignatureDefinition } from "./signatures/signature-definition";
 import { DescriptionsPayload, SignaturePayload } from "./types/payloads";
 import { DescriptionContainerItem, SignatureDefinitionBaseType, SignatureDefinitionType } from "./types/signature-definition";
-
-export interface AddTypeSignatureOptions {
-  type: string;
-  extend?: string;
-  definitions: Record<string, SignatureDefinition>;
-}
 
 export class Container {
   private _primitives: Map<SignatureDefinitionBaseType, Signature>;
   private _types: Map<SignatureDefinitionType, Signature>;
   private _excludeFromSearch: Set<SignatureDefinitionType>;
 
-  get primitives() {
-    return this._primitives;
-  }
-
-  get types() {
-    return this._types;
-  }
-
-  get excludeFromSearch() {
-    return this._excludeFromSearch;
-  }
-
   constructor() {
     this._primitives = new Map([
-      [SignatureDefinitionBaseType.Any, new Signature(SignatureDefinitionBaseType.Any)],
-      [SignatureDefinitionBaseType.General, new Signature(SignatureDefinitionBaseType.General)],
-      [SignatureDefinitionBaseType.String, new Signature(SignatureDefinitionBaseType.String)],
-      [SignatureDefinitionBaseType.Function, new Signature(SignatureDefinitionBaseType.Function)],
-      [SignatureDefinitionBaseType.Number, new Signature(SignatureDefinitionBaseType.Number)],
-      [SignatureDefinitionBaseType.List, new Signature(SignatureDefinitionBaseType.List)],
-      [SignatureDefinitionBaseType.Map, new Signature(SignatureDefinitionBaseType.Map)]
+      [SignatureDefinitionBaseType.Any, new Signature({ type: SignatureDefinitionBaseType.Any })],
+      [SignatureDefinitionBaseType.General, new Signature({ type: SignatureDefinitionBaseType.General })],
+      [SignatureDefinitionBaseType.String, new Signature({ type: SignatureDefinitionBaseType.String })],
+      [SignatureDefinitionBaseType.Function, new Signature({ type: SignatureDefinitionBaseType.Function })],
+      [SignatureDefinitionBaseType.Number, new Signature({ type: SignatureDefinitionBaseType.Number })],
+      [SignatureDefinitionBaseType.List, new Signature({ type: SignatureDefinitionBaseType.List })],
+      [SignatureDefinitionBaseType.Map, new Signature({ type: SignatureDefinitionBaseType.Map })]
     ]);
     this._types = new Map();
     this._excludeFromSearch = new Set();
@@ -43,10 +25,28 @@ export class Container {
   private getOrCreateTypeSignature(type: SignatureDefinitionType) {
     let signature = this.getTypeSignature(type);
     if (signature == null) {
-      signature = new Signature(type);
+      signature = new Signature({ type });
       this._types.set(type, signature);
     }
     return signature;
+  }
+
+  getPrimitives() {
+    return this._primitives;
+  }
+
+  getTypes() {
+    return this._types;
+  }
+
+  excludeFromSearch(type: SignatureDefinitionType) {
+    this._excludeFromSearch.add(type);
+    return this;
+  }
+
+  includeToSearch(type: SignatureDefinitionType) {
+    this._excludeFromSearch.delete(type);
+    return this;
   }
 
   getTypeSignature(type: SignatureDefinitionType): Signature | null {
@@ -68,19 +68,27 @@ export class Container {
     ];
   }
 
+  getAllVisibleSignatures() {
+    return [
+      ...this.getAllPrimitiveSignatures(),
+      ...this.getAllTypeSignatures()
+    ].filter((signature) => signature.isHidden());
+  }
+
   addTypeSignatureFromPayload(payload: SignaturePayload): this {
     const newSignature = Signature.parse(payload);
     this.addTypeSignature({
-      type: newSignature.type,
-      extend: newSignature.extend,
-      definitions: newSignature.definitions
+      type: newSignature.getType(),
+      extends: newSignature.getExtendedType(),
+      hidden: newSignature.isHidden(),
+      definitions: newSignature.getDefinitions()
     });
     return this;
   }
 
-  addTypeSignature(options: AddTypeSignatureOptions): this {
+  addTypeSignature(options: SignatureOptions): this {
     const signature = this.getOrCreateTypeSignature(options.type);
-    if (options.extend !== undefined) signature.setExtend(options.extend);
+    if (options.extends !== undefined) signature.setExtend(options.extends);
     signature.mergeDefinitions(options.definitions);
     return this;
   }
@@ -112,6 +120,7 @@ export class Container {
   searchDefinitionMatches(types: string | SignatureDefinitionType[], property: string, language: string = 'en'): Map<SignatureDefinitionType, SignatureDefinition> {
     if (typeof types === 'string') return this.searchDefinitionMatches([types], property, language);
     const typesSet = new Set(types);
+    const visited = new Set();
     const matches: Map<SignatureDefinitionType, SignatureDefinition> = new Map();
 
     for (const type of typesSet) {
@@ -121,11 +130,12 @@ export class Container {
       let current = this.getTypeSignature(type);
       let match: SignatureDefinition = null;
 
-      while (current !== null) {
-        match = current.getDefinition(property, language);
+      while (current !== null && !visited.has(current.getType())) {
+        visited.add(current.getType());
+        if (!current.isHidden()) match = current.getDefinition(property, language);
         if (match !== null) break;
-        currentType = current.extend;
-        current = this.getTypeSignature(current.extend);
+        currentType = current.getExtendedType();
+        current = this.getTypeSignature(currentType);
       }
 
       if (match === null) continue;

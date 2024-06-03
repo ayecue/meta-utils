@@ -2,7 +2,7 @@ export { SignatureDefinitionFunctionArg, SignatureDefinitionFunctionArgOptions }
 export { SignatureDefinitionFunction, SignatureDefinitionFunctionOptions } from './signatures/signature-definition-function';
 export { SignatureDefinitionTypeMeta, SignatureDefinitionTypeMetaOptions } from './signatures/signature-definition-type-meta';
 export { SignatureDefinition, SignatureDefinitionOptions } from './signatures/signature-definition';
-export { Signature } from './signatures/signature';
-export { Container, AddTypeSignatureOptions } from './container';
+export { Signature, SignatureOptions } from './signatures/signature';
+export { Container } from './container';
 export * from './types/payloads';
 export * from './types/signature-definition';

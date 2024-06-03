@@ -1,6 +1,11 @@
 import Joi from 'joi';
 import { SignatureDefinitionBaseType } from './types/signature-definition';
 
+export const variationsSchema = Joi.array().items(Joi.alternatives(
+  Joi.string(),
+  Joi.number()
+));
+
 export const signatureDefinitionTypeSchema = Joi.alternatives(
   Joi.string(),
   Joi.object({
@@ -51,14 +56,17 @@ export const signatureDefinitionFunctionSchema = Joi.object({
       signatureDefinitionFunctionSchemaArgMultiTypes
     ))
     .optional(),
-  returns: Joi.array().items(signatureDefinitionTypeSchema).required()
+  returns: Joi.array().items(signatureDefinitionTypeSchema).required(),
+  variations: variationsSchema.optional(),
+  returnVariations: variationsSchema.optional()
 });
 
 export const signatureDefinitionSchema = Joi.object({
   type: signatureDefinitionTypeSchema.invalid(SignatureDefinitionBaseType.Function).required(),
   description: Joi.string().optional(),
   example: Joi.string().optional(),
-  isProtected: Joi.boolean().optional()
+  isProtected: Joi.boolean().optional(),
+  variations: variationsSchema.optional(),
 });
 
 export const signatureDefinitionContainerSchema = Joi.object().pattern(
@@ -68,6 +76,13 @@ export const signatureDefinitionContainerSchema = Joi.object().pattern(
     signatureDefinitionSchema
   )
 );
+
+export const signatureSchema = Joi.object({
+  type: Joi.string().required(),
+  hidden: Joi.string().optional(),
+  extends: Joi.string().optional(),
+  definitions: Joi.object().required()
+});
 
 export const descriptionContainerSchema = Joi.object({
   $meta: Joi.object({

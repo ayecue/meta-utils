@@ -2,7 +2,8 @@ import Joi from 'joi';
 
 import {
   descriptionContainerSchema,
-  signatureDefinitionContainerSchema
+  signatureDefinitionContainerSchema,
+  signatureSchema
 } from '../schema';
 import {
   DescriptionPayloadContainer,
@@ -17,6 +18,13 @@ import {
 } from '../types/signature-definition';
 import { SignatureDefinition } from './signature-definition';
 import { SignatureDefinitionFunction } from './signature-definition-function';
+
+export interface SignatureOptions {
+  type: SignatureDefinitionType;
+  extends?: string;
+  hidden?: boolean;
+  definitions?: Record<string, SignatureDefinition>;
+}
 
 export class Signature {
   static parseDefinitions(
@@ -76,7 +84,13 @@ export class Signature {
     payload: SignaturePayload,
     languages?: Record<string, DescriptionPayloadContainer>
   ): Signature {
-    const signature = new Signature(payload.type, payload.extends);
+    Joi.assert(payload, signatureSchema);
+
+    const signature = new Signature({
+      type: payload.type,
+      hidden: payload.hidden,
+      extends: payload.extends
+    });
     const definitions = Signature.parseDefinitions(payload.definitions);
 
     signature.setDefinition(definitions);
@@ -92,38 +106,44 @@ export class Signature {
   }
 
   private _type: SignatureDefinitionType;
-  private _extend: SignatureDefinitionType | null;
+  private _extends: SignatureDefinitionType | null;
+  private _hidden: boolean;
   private _definitions: Record<string, SignatureDefinition>;
   private _descriptions: Record<
     string,
     Record<string, DescriptionContainerItem>
   >;
 
-  get type() {
+  getType() {
     return this._type;
   }
 
-  get extend() {
-    return this._extend;
+  getExtendedType() {
+    return this._extends;
   }
 
-  get definitions() {
+  getDefinitions() {
     return this._definitions;
   }
 
-  get descriptions() {
+  getAllDescriptions() {
     return this._descriptions;
   }
 
-  constructor(type: SignatureDefinitionType, extend?: SignatureDefinitionType) {
-    this._type = type;
-    this._extend = extend ?? null;
+  isHidden() {
+    return this._hidden;
+  }
+
+  constructor(options: SignatureOptions) {
+    this._type = options.type;
+    this._extends = options.extends ?? null;
     this._descriptions = {};
-    this._definitions = {};
+    this._definitions = options.definitions ?? {};
+    this._hidden = options.hidden ?? false;
   }
 
   setExtend(type: SignatureDefinitionType | null): this {
-    this._extend = type;
+    this._extends = type;
     return this;
   }
 
@@ -210,14 +230,19 @@ export class Signature {
     }
 
     return {
-      type: this.type,
-      extend: this.extend,
+      type: this._type,
+      extend: this._extends,
+      hidden: this._hidden,
       definitions
     };
   }
 
   copy() {
-    const signature = new Signature(this._type);
+    const signature = new Signature({
+      type: this._type,
+      hidden: this._hidden,
+      extends: this._extends
+    });
     const definitions: Signature['_definitions'] = {};
     const definitionKeys = Object.keys(this._definitions);
 

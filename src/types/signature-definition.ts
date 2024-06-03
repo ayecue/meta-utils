@@ -19,3 +19,5 @@ export interface SignatureDefinitionFunctionArgDefault {
   type: SignatureDefinitionBaseType.Number | SignatureDefinitionBaseType.String;
   value: number | string;
 }
+
+export type Variation = string | number;
