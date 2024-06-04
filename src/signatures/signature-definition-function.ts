@@ -4,6 +4,7 @@ import {
   SignatureDefinitionBaseType,
   Variation
 } from '../types/signature-definition';
+import { VariationRegistry } from '../variation';
 import {
   SignatureDefinition,
   SignatureDefinitionOptions
@@ -86,7 +87,7 @@ export class SignatureDefinitionFunction extends SignatureDefinition {
   }
 
   getReturnVariations() {
-    return this._returnVariations;
+    return VariationRegistry.resolve(this._returnVariations);
   }
 
   toJSON() {

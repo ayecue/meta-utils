@@ -6,6 +6,7 @@ import {
   DescriptionContainerItem,
   Variation
 } from '../types/signature-definition';
+import { VariationRegistry } from '../variation';
 import { SignatureDefinitionTypeMeta } from './signature-definition-type-meta';
 
 export interface SignatureDefinitionOptions {
@@ -72,7 +73,7 @@ export class SignatureDefinition {
   }
 
   getVariations() {
-    return this._variations;
+    return VariationRegistry.resolve(this._variations);
   }
 
   toJSON() {

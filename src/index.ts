@@ -4,5 +4,6 @@ export { SignatureDefinitionTypeMeta, SignatureDefinitionTypeMetaOptions } from 
 export { SignatureDefinition, SignatureDefinitionOptions } from './signatures/signature-definition';
 export { Signature, SignatureOptions } from './signatures/signature';
 export { Container } from './container';
+export { VariationRegistry } from './variation';
 export * from './types/payloads';
 export * from './types/signature-definition';

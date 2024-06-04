@@ -1,7 +1,7 @@
 import { Signature, SignatureOptions } from "./signatures/signature";
 import { SignatureDefinition } from "./signatures/signature-definition";
 import { DescriptionsPayload, SignaturePayload } from "./types/payloads";
-import { DescriptionContainerItem, SignatureDefinitionBaseType, SignatureDefinitionType } from "./types/signature-definition";
+import { DescriptionContainerItem, SignatureDefinitionBaseType, SignatureDefinitionType, Variation } from "./types/signature-definition";
 
 export class Container {
   private _primitives: Map<SignatureDefinitionBaseType, Signature>;

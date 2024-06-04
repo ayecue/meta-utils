@@ -1,4 +1,4 @@
-const { Container, Signature } = require('../dist');
+const { Container, Signature, VariationRegistry } = require('../dist');
 const AnySignatures = require('./mocks/signatures/any.json');
 const GeneralSignatures = require('./mocks/signatures/general.json');
 const StringSignatures = require('./mocks/signatures/string.json');
@@ -10,6 +10,12 @@ describe('container', () => {
   let meta = null;
 
   beforeEach(() => {
+    VariationRegistry.add('test.variation', [
+      "hello world",
+      1234,
+      1337
+    ]);
+
     meta = new Container();
 
     meta.addTypeSignatureFromPayload(AnySignatures);
@@ -53,7 +59,12 @@ describe('container', () => {
   });
 
   test('should return returnVariations', () => {
-    expect(meta.getDefinition(['sub-string'], 'remove2').getReturnVariations()).toEqual([123]);
+    expect(meta.getDefinition(['sub-string'], 'remove2').getReturnVariations()).toEqual([
+      "hello world",
+      1234,
+      1337,
+      123
+    ]);
   });
 
   test('should return property definition', () => {

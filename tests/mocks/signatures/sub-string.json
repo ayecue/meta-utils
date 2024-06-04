@@ -14,7 +14,8 @@
         "string"
       ],
       "returnVariations": [
-        123
+        123,
+        "!test.variation"
       ]
     },
     "myProperty": {
