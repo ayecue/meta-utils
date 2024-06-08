@@ -87,6 +87,9 @@ export class SignatureDefinitionFunction extends SignatureDefinition {
   }
 
   getReturnVariations() {
+    if (this._returnVariations == null) {
+      this._returnVariations = [];
+    }
     return VariationRegistry.resolve(this._returnVariations);
   }
 
