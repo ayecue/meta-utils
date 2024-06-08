@@ -2,6 +2,8 @@ const { Container, Signature, VariationRegistry } = require('../dist');
 const AnySignatures = require('./mocks/signatures/any.json');
 const GeneralSignatures = require('./mocks/signatures/general.json');
 const StringSignatures = require('./mocks/signatures/string.json');
+const ListSignatures = require('./mocks/signatures/list.json');
+const MapSignatures = require('./mocks/signatures/map.json');
 const SubStringSignatures = require('./mocks/signatures/sub-string.json');
 const NotSearchableSignature = require('./mocks/signatures/not-searchable.json');
 const EN = require('./mocks/descriptions/en');
@@ -21,6 +23,8 @@ describe('container', () => {
     meta.addTypeSignatureFromPayload(AnySignatures);
     meta.addTypeSignatureFromPayload(GeneralSignatures);
     meta.addTypeSignatureFromPayload(StringSignatures);
+    meta.addTypeSignatureFromPayload(ListSignatures);
+    meta.addTypeSignatureFromPayload(MapSignatures);
     meta.addTypeSignatureFromPayload(SubStringSignatures);
     meta.addTypeSignatureFromPayload(NotSearchableSignature);
 
@@ -89,9 +93,9 @@ describe('container', () => {
     expect([...result.keys()]).toEqual(['sub-string', 'string']);
   });
 
-  test('should return two matches from any', () => {
+  test('should return three matches from any', () => {
     const result = meta.searchDefinitionMatches('any', 'hasIndex');
-    expect([...result.keys()]).toEqual(['general', 'string']);
+    expect([...result.keys()]).toEqual(['string', 'list', 'map']);
   });
 
   test('should create fork', () => {

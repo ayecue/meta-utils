@@ -1,0 +1,17 @@
+{
+  "type": "list",
+  "definitions": {
+    "hasIndex": {
+      "type": "function",
+      "arguments": [
+        {
+          "label": "index",
+          "type": "number"
+        }
+      ],
+      "returns": [
+        "number"
+      ]
+    }
+  }
+}

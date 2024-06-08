@@ -44,7 +44,7 @@ export class Container {
       ...this._primitives.keys(),
       ...this._types.keys()
     ]
-      .filter((type) => !this.getTypeSignature(type).isHidden() && type !== SignatureDefinitionBaseType.Any);
+      .filter((type) => !this.getTypeSignature(type).isHidden() && type !== SignatureDefinitionBaseType.Any && type !== SignatureDefinitionBaseType.General);
   }
 
   excludeFromSearch(type: SignatureDefinitionType) {
