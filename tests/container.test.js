@@ -89,6 +89,11 @@ describe('container', () => {
     expect([...result.keys()]).toEqual(['sub-string', 'string']);
   });
 
+  test('should return two matches from any', () => {
+    const result = meta.searchDefinitionMatches('any', 'hasIndex');
+    expect([...result.keys()]).toEqual(['general', 'string']);
+  });
+
   test('should create fork', () => {
     const result = meta.fork();
 

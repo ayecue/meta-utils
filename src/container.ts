@@ -39,6 +39,14 @@ export class Container {
     return this._types;
   }
 
+  getAllVisibleTypes() {
+    return [
+      ...this._primitives.keys(),
+      ...this._types.keys()
+    ]
+      .filter((type) => !this.getTypeSignature(type).isHidden() && type !== SignatureDefinitionBaseType.Any);
+  }
+
   excludeFromSearch(type: SignatureDefinitionType) {
     this._excludeFromSearch.add(type);
     return this;
@@ -119,7 +127,7 @@ export class Container {
 
   searchDefinitionMatches(types: string | SignatureDefinitionType[], property: string, language: string = 'en'): Map<SignatureDefinitionType, SignatureDefinition> {
     if (typeof types === 'string') return this.searchDefinitionMatches([types], property, language);
-    const typesSet = new Set(types);
+    const typesSet = types.includes(SignatureDefinitionBaseType.Any) ? new Set(this.getAllVisibleTypes()) : new Set(types);
     const visited = new Set();
     const matches: Map<SignatureDefinitionType, SignatureDefinition> = new Map();
 
