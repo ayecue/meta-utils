@@ -87,12 +87,12 @@ export const signatureSchema = Joi.object({
 export const descriptionContainerSchema = Joi.object({
   $meta: Joi.object({
     description: Joi.string().required(),
-    example: Joi.array().items(Joi.string()).optional()
+    example: Joi.array().items(Joi.string().allow('')).optional()
   }).optional()
 }).pattern(
   Joi.string(),
   Joi.object({
     description: Joi.string().required(),
-    example: Joi.array().items(Joi.string()).optional()
+    example: Joi.array().items(Joi.string().allow('')).optional()
   })
 );
