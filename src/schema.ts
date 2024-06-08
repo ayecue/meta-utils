@@ -79,7 +79,7 @@ export const signatureDefinitionContainerSchema = Joi.object().pattern(
 
 export const signatureSchema = Joi.object({
   type: Joi.string().required(),
-  hidden: Joi.string().optional(),
+  hidden: Joi.boolean().optional(),
   extends: Joi.string().optional(),
   definitions: Joi.object().required()
 });
