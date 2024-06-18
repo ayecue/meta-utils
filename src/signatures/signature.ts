@@ -38,8 +38,8 @@ export class Signature {
       const parsed =
         value.type === SignatureDefinitionBaseType.Function
           ? SignatureDefinitionFunction.parse(
-              value as SignaturePayloadDefinitionFunction
-            )
+            value as SignaturePayloadDefinitionFunction
+          )
           : SignatureDefinition.parse(value);
 
       definitions[key] = parsed;
@@ -166,8 +166,8 @@ export class Signature {
     property: string,
     language?: string
   ): SignatureDefinition | null {
+    if (!Object.prototype.hasOwnProperty.call(this._definitions, property)) return null;
     const definition = this._definitions[property];
-    if (definition == null) return null;
     const description = this.getDescriptions(language);
     const descriptionItem = description[property];
 
