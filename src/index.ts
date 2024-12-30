@@ -5,5 +5,6 @@ export { SignatureDefinition, SignatureDefinitionOptions } from './signatures/si
 export { Signature, SignatureOptions } from './signatures/signature';
 export { Container } from './container';
 export { VariationRegistry } from './variation';
+export { TypeParser } from './utils/type-parser'
 export * from './types/payloads';
 export * from './types/signature-definition';

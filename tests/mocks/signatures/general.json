@@ -44,6 +44,31 @@
       "returns": [
         "null"
       ]
+    },
+    "nested": {
+      "type": "function",
+      "arguments": [
+        {
+          "label": "value",
+          "type": {
+            "type": "map",
+            "keyType": "string",
+            "valueType": {
+              "type": "list",
+              "valueType": "string"
+            }
+          }
+        }
+      ],
+      "returns": [
+        {
+          "type": "list",
+          "valueType": {
+            "type": "list",
+            "valueType": "number"
+          }
+        }
+      ]
     }
   }
 }

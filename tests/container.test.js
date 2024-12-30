@@ -62,6 +62,13 @@ describe('container', () => {
     expect(meta.getDefinition(['sub-string'], 'myProperty').getVariations()).toEqual([1, 'foo']);
   });
 
+  test('should handle nested', () => {
+    const definition = meta.getDefinition('general', 'nested');
+
+    expect(definition.getArgument('value').getTypes()[0].toString()).toEqual("map<string,list<string>>");
+    expect(definition.getReturns()[0].toString()).toEqual("list<list<number>>");
+  });
+
   test('should return returnVariations', () => {
     expect(meta.getDefinition(['sub-string'], 'remove2').getReturnVariations()).toEqual([
       "hello world",

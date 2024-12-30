@@ -10,10 +10,10 @@ export const signatureDefinitionTypeSchema = Joi.alternatives(
   Joi.string(),
   Joi.object({
     type: Joi.string().required(),
-    keyType: Joi.string().optional(),
-    valueType: Joi.string().optional(),
+    keyType: Joi.link('#SignatureDefinitionTypeSchema').optional(),
+    valueType: Joi.link('#SignatureDefinitionTypeSchema').optional()
   })
-);
+).id('SignatureDefinitionTypeSchema');
 
 export const signatureDefinitionFunctionSchemaArgDefaultString = Joi.object({
   type: Joi.string().valid(SignatureDefinitionBaseType.String).required(),

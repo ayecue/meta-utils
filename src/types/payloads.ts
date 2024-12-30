@@ -20,13 +20,19 @@ export interface DescriptionsPayload {
 
 export interface SignaturePayloadDefinitionTypeMeta {
   type: SignatureDefinitionType;
-  keyType?: SignatureDefinitionType;
-  valueType?: SignatureDefinitionType;
+  keyType?: SignaturePayloadDefinitionType;
+  valueType?: SignaturePayloadDefinitionType;
 }
 
 export type SignaturePayloadDefinitionType =
   | string
   | SignaturePayloadDefinitionTypeMeta;
+
+export function getSignaturePayloadDefinitionType(item: SignaturePayloadDefinitionType): string | null {
+  if (item == null) return null;
+  if (typeof item === 'object') return item.type;
+  return item;
+}
 
 export interface SignaturePayloadDefinitionArg {
   label: string;
@@ -53,8 +59,8 @@ export interface SignaturePayloadDefinitionFunction
 
 export type SignaturePayloadDefinitionContainer = {
   [key: string]:
-    | SignaturePayloadDefinitionFunction
-    | SignaturePayloadDefinition;
+  | SignaturePayloadDefinitionFunction
+  | SignaturePayloadDefinition;
 };
 
 export interface SignaturePayload {
