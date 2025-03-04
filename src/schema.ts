@@ -46,6 +46,7 @@ export const signatureDefinitionFunctionSchemaArg = Joi.object({
 });
 
 export const signatureDefinitionFunctionSchema = Joi.object({
+  id: Joi.string().required(),
   type: Joi.string().valid(SignatureDefinitionBaseType.Function).required(),
   description: Joi.string().optional(),
   example: Joi.string().optional(),
@@ -57,6 +58,7 @@ export const signatureDefinitionFunctionSchema = Joi.object({
     ))
     .optional(),
   returns: Joi.array().items(signatureDefinitionTypeSchema).required(),
+  tags: Joi.array().items(Joi.string()).optional(),
   variations: variationsSchema.optional(),
   returnVariations: variationsSchema.optional()
 });
@@ -67,6 +69,7 @@ export const signatureDefinitionSchema = Joi.object({
   example: Joi.string().optional(),
   isProtected: Joi.boolean().optional(),
   variations: variationsSchema.optional(),
+  tags: Joi.array().items(Joi.string()).optional(),
 });
 
 export const signatureDefinitionContainerSchema = Joi.object().pattern(

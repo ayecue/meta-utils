@@ -2,12 +2,16 @@
   "type": "map",
   "definitions": {
     "hasIndex": {
+      "id": "hasIndex",
       "type": "function",
       "arguments": [
         {
           "label": "index",
           "type": "number"
         }
+      ],
+      "tags": [
+        "method"
       ],
       "returns": [
         "number"

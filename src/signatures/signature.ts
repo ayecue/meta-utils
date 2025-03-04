@@ -28,6 +28,7 @@ export interface SignatureOptions {
 
 export class Signature {
   static parseDefinitions(
+    origin: string,
     payload: SignaturePayloadDefinitionContainer
   ): Record<string, SignatureDefinition> {
     Joi.assert(payload, signatureDefinitionContainerSchema);
@@ -38,9 +39,10 @@ export class Signature {
       const parsed =
         value.type === SignatureDefinitionBaseType.Function
           ? SignatureDefinitionFunction.parse(
-            value as SignaturePayloadDefinitionFunction
-          )
-          : SignatureDefinition.parse(value);
+              origin,
+              value as SignaturePayloadDefinitionFunction
+            )
+          : SignatureDefinition.parse(origin, value);
 
       definitions[key] = parsed;
     }
@@ -91,9 +93,12 @@ export class Signature {
       hidden: payload.hidden,
       extends: payload.extends
     });
-    const definitions = Signature.parseDefinitions(payload.definitions);
+    const definitions = Signature.parseDefinitions(
+      payload.type,
+      payload.definitions
+    );
 
-    signature.setDefinition(definitions);
+    signature.setDefinitions(definitions);
 
     if (languages != null) {
       for (const [language, descriptionPayload] of Object.entries(languages)) {
@@ -147,7 +152,7 @@ export class Signature {
     return this;
   }
 
-  setDefinition(definitions: Record<string, SignatureDefinition>): this {
+  setDefinitions(definitions: Record<string, SignatureDefinition>): this {
     this._definitions = definitions;
     return this;
   }
@@ -155,7 +160,8 @@ export class Signature {
   mergeDefinitions(definitions: Record<string, SignatureDefinition>): this {
     const keys = Object.keys(definitions);
 
-    for (const key of keys) {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
       this._definitions[key] = definitions[key];
     }
 
@@ -166,7 +172,8 @@ export class Signature {
     property: string,
     language?: string
   ): SignatureDefinition | null {
-    if (!Object.prototype.hasOwnProperty.call(this._definitions, property)) return null;
+    if (!Object.prototype.hasOwnProperty.call(this._definitions, property))
+      return null;
     const definition = this._definitions[property];
     const description = this.getDescriptions(language);
     const descriptionItem = description[property];
@@ -196,7 +203,8 @@ export class Signature {
 
     const keys = Object.keys(input);
 
-    for (const key of keys) {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
       descriptions[key] = {
         ...descriptions[key],
         ...input[key]
@@ -225,7 +233,8 @@ export class Signature {
     > = {};
     const keys = Object.keys(this._definitions);
 
-    for (const key of keys) {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
       definitions[key] = this._definitions[key].toJSON();
     }
 
@@ -246,14 +255,16 @@ export class Signature {
     const definitions: Signature['_definitions'] = {};
     const definitionKeys = Object.keys(this._definitions);
 
-    for (const key of definitionKeys) {
+    for (let i = 0; i < definitionKeys.length; i++) {
+      const key = definitionKeys[i];
       definitions[key] = this._definitions[key].copy();
     }
 
     const descriptions: Signature['_descriptions'] = {};
     const descriptionsKeys = Object.keys(this._descriptions);
 
-    for (const key of descriptionsKeys) {
+    for (let i = 0; i < descriptionsKeys.length; i++) {
+      const key = descriptionsKeys[i];
       descriptions[key] = { ...descriptions[key] };
     }
 

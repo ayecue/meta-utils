@@ -1,5 +1,5 @@
-import { SignaturePayloadDefinitionTypeMeta } from "../types/payloads";
-import { SignatureDefinitionBaseType } from "../types/signature-definition";
+import { SignaturePayloadDefinitionTypeMeta } from '../types/payloads';
+import { SignatureDefinitionBaseType } from '../types/signature-definition';
 
 export class TypeParser {
   private _rx: RegExp;
@@ -69,6 +69,6 @@ export class TypeParser {
         return this.parseMap(type);
     }
 
-    return { type: type };
+    return { type };
   }
 }

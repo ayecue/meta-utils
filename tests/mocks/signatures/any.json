@@ -2,6 +2,7 @@
   "type": "any",
   "definitions": {
     "hasIndex": {
+      "id": "hasIndex",
       "type": "function",
       "arguments": [
         {
@@ -12,6 +13,9 @@
           "label": "bar",
           "type": "any"
         }
+      ],
+      "tags": [
+        "method"
       ],
       "returns": [
         "number"

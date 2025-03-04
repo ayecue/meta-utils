@@ -127,4 +127,17 @@ describe('container', () => {
     expect(result.getDefinition('general', 'print').getDescription()).toEqual('test');
     expect(meta.getDefinition('general', 'print').getDescription()).toEqual(EN.general.print.description);
   });
+
+  test('should get all available tags', () => {
+    const result = meta.getAvailableTags();
+
+    expect(result).toEqual(['method', 'function', 'property']);
+  });
+
+  test('should get all signature definitions by identifier', () => {
+    const result = meta.getDefinitionsById('hasIndex');
+
+    expect(result.length).toEqual(5);
+    expect(result.map((item) => item.getOrigin())).toEqual(['any', 'general', 'string', 'list', 'map']);
+  });
 });

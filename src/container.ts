@@ -1,5 +1,6 @@
 import { Signature, SignatureOptions } from "./signatures/signature";
 import { SignatureDefinition } from "./signatures/signature-definition";
+import { SignatureDefinitionFunction } from "./signatures/signature-definition-function";
 import { DescriptionsPayload, SignaturePayload } from "./types/payloads";
 import { DescriptionContainerItem, SignatureDefinitionBaseType, SignatureDefinitionType, Variation } from "./types/signature-definition";
 
@@ -37,6 +38,18 @@ export class Container {
 
   getTypes() {
     return this._types;
+  }
+
+  getAvailableTags() {
+    const tags = [
+      ...this._primitives.keys(),
+      ...this._types.keys()
+    ].flatMap((type) => {
+      const signature = this.getTypeSignature(type);
+      return Object.values(signature.getDefinitions()).flatMap((definition) => definition.getTags());
+    });
+
+    return Array.from(new Set(tags));
   }
 
   getAllVisibleTypes() {
@@ -105,7 +118,8 @@ export class Container {
     const meta: Record<SignatureDefinitionType, Record<string, DescriptionContainerItem>> = {};
     const keys = Object.keys(payload);
 
-    for (const key of keys) {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
       const parsed = Signature.parseDescriptions(payload[key]);
       meta[key] = parsed;
     }
@@ -117,7 +131,8 @@ export class Container {
   addMeta(language: string, meta: Record<SignatureDefinitionType, Record<string, DescriptionContainerItem>>): this {
     const keys = Object.keys(meta);
 
-    for (const key of keys) {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
       const type = this.getOrCreateTypeSignature(key);
       type.addDescriptions(language, meta[key]);
     }
@@ -178,6 +193,18 @@ export class Container {
     }
 
     return matches.values().next().value;
+  }
+
+  getDefinitionsById(id: string): SignatureDefinitionFunction[] {
+    return [
+      ...this._primitives.keys(),
+      ...this._types.keys()
+    ].flatMap((type) => {
+      const signature = this.getTypeSignature(type);
+      return Object.values(signature.getDefinitions()).filter((definition): definition is SignatureDefinitionFunction => {
+        return definition instanceof SignatureDefinitionFunction && definition.getId() === id;
+      });
+    });
   }
 
   fork() {

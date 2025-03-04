@@ -40,7 +40,8 @@ export class VariationRegistry {
   static resolve(variations: Variation[]): Variation[] {
     let result = new Set<Variation>();
 
-    for (const variation of variations) {
+    for (let i = 0; i < variations.length; i++) {
+      const variation = variations[i];
       if (typeof variation === 'string' && variation.startsWith('!')) {
         const name = variation.slice(1);
         const container = this.get(name);

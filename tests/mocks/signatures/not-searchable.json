@@ -3,12 +3,16 @@
   "extends": "string",
   "definitions": {
     "hello": {
+      "id": "hello",
       "type": "function",
       "arguments": [
         {
           "label": "foo",
           "type": "number"
         }
+      ],
+      "tags": [
+        "method"
       ],
       "returns": [
         "number"

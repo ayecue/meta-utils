@@ -2,6 +2,7 @@
   "type": "general",
   "definitions": {
     "hasIndex": {
+      "id": "hasIndex",
       "type": "function",
       "arguments": [
         {
@@ -20,11 +21,15 @@
           }
         }
       ],
+      "tags": [
+        "function"
+      ],
       "returns": [
         "number"
       ]
     },
     "print": {
+      "id": "print",
       "type": "function",
       "arguments": [
         {
@@ -41,11 +46,15 @@
           "opt": true
         }
       ],
+      "tags": [
+        "function"
+      ],
       "returns": [
         "null"
       ]
     },
     "nested": {
+      "id": "nested",
       "type": "function",
       "arguments": [
         {
@@ -59,6 +68,9 @@
             }
           }
         }
+      ],
+      "tags": [
+        "function"
       ],
       "returns": [
         {

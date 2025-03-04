@@ -1,6 +1,6 @@
 {
   "name": "meta-utils",
-  "version": "2.5.0",
+  "version": "3.0.0",
   "description": "Meta description utils",
   "main": "dist/index",
   "typings": "dist/index",
@@ -52,6 +52,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "joi": "^17.13.1"
+    "joi": "^17.13.1",
+    "nanoid": "^3.3.8"
   }
 }

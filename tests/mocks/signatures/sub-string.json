@@ -3,12 +3,16 @@
   "extends": "string",
   "definitions": {
     "remove2": {
+      "id": "remove",
       "type": "function",
       "arguments": [
         {
           "label": "toDelete",
           "type": "string"
         }
+      ],
+      "tags": [
+        "method"
       ],
       "returns": [
         "string"
@@ -23,6 +27,9 @@
         "type": "list",
         "valueType": "string"
       },
+      "tags": [
+        "property"
+      ],
       "isProtected": true,
       "variations": [
         1,
@@ -30,6 +37,7 @@
       ]
     },
     "split": {
+      "id": "split",
       "type": "function",
       "arguments": [
         {
@@ -44,6 +52,9 @@
             "keyType": "string"
           }
         }
+      ],
+      "tags": [
+        "method"
       ],
       "returns": [
         {
